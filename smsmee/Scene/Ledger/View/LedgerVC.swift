@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LedgerVC: UIViewController {
+class LedgerVC: AbstractVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
