@@ -6,6 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		9F37DCB82D45D3FE00BE8BF6 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 9F37DCB72D45D3FE00BE8BF6 /* RxCocoa */; };
+		9F37DCBA2D45D3FE00BE8BF6 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 9F37DCB92D45D3FE00BE8BF6 /* RxRelay */; };
+		9F37DCBC2D45D3FE00BE8BF6 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9F37DCBB2D45D3FE00BE8BF6 /* RxSwift */; };
+		9F37DCBF2D45D41A00BE8BF6 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9F37DCBE2D45D41A00BE8BF6 /* RealmSwift */; };
+		9F37DCC22D45D42E00BE8BF6 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9F37DCC12D45D42E00BE8BF6 /* SnapKit */; };
+		9F37DCC52D45D44400BE8BF6 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 9F37DCC42D45D44400BE8BF6 /* DGCharts */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		9F37DC272D45CDFB00BE8BF6 /* smsmee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = smsmee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +45,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9F37DCBF2D45D41A00BE8BF6 /* RealmSwift in Frameworks */,
+				9F37DCBC2D45D3FE00BE8BF6 /* RxSwift in Frameworks */,
+				9F37DCBA2D45D3FE00BE8BF6 /* RxRelay in Frameworks */,
+				9F37DCB82D45D3FE00BE8BF6 /* RxCocoa in Frameworks */,
+				9F37DCC52D45D44400BE8BF6 /* DGCharts in Frameworks */,
+				9F37DCC22D45D42E00BE8BF6 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +93,12 @@
 			);
 			name = smsmee;
 			packageProductDependencies = (
+				9F37DCB72D45D3FE00BE8BF6 /* RxCocoa */,
+				9F37DCB92D45D3FE00BE8BF6 /* RxRelay */,
+				9F37DCBB2D45D3FE00BE8BF6 /* RxSwift */,
+				9F37DCBE2D45D41A00BE8BF6 /* RealmSwift */,
+				9F37DCC12D45D42E00BE8BF6 /* SnapKit */,
+				9F37DCC42D45D44400BE8BF6 /* DGCharts */,
 			);
 			productName = smsmee;
 			productReference = 9F37DC272D45CDFB00BE8BF6 /* smsmee.app */;
@@ -107,6 +128,12 @@
 			);
 			mainGroup = 9F37DC1E2D45CDFB00BE8BF6;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9F37DCB62D45D3FE00BE8BF6 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				9F37DCBD2D45D41A00BE8BF6 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				9F37DCC02D45D42E00BE8BF6 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				9F37DCC32D45D44400BE8BF6 /* XCRemoteSwiftPackageReference "Charts" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9F37DC282D45CDFB00BE8BF6 /* Products */;
 			projectDirPath = "";
@@ -150,7 +177,6 @@
 				INFOPLIST_FILE = smsmee/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -178,7 +204,6 @@
 				INFOPLIST_FILE = smsmee/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -335,6 +360,74 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9F37DCB62D45D3FE00BE8BF6 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.8.0;
+			};
+		};
+		9F37DCBD2D45D41A00BE8BF6 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		9F37DCC02D45D42E00BE8BF6 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		9F37DCC32D45D44400BE8BF6 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ChartsOrg/Charts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9F37DCB72D45D3FE00BE8BF6 /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F37DCB62D45D3FE00BE8BF6 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		9F37DCB92D45D3FE00BE8BF6 /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F37DCB62D45D3FE00BE8BF6 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		9F37DCBB2D45D3FE00BE8BF6 /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F37DCB62D45D3FE00BE8BF6 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		9F37DCBE2D45D41A00BE8BF6 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F37DCBD2D45D41A00BE8BF6 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+		9F37DCC12D45D42E00BE8BF6 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F37DCC02D45D42E00BE8BF6 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		9F37DCC42D45D44400BE8BF6 /* DGCharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9F37DCC32D45D44400BE8BF6 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = DGCharts;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9F37DC1F2D45CDFB00BE8BF6 /* Project object */;
 }
