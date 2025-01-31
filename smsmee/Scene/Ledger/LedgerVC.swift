@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LedgerVC: AbstractVC {
+final class LedgerVC: BaseViewController<<#VM: BaseViewModel<Intent, State>#>, <#Intent: BaseIntent#>, <#State: BaseState#>> {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,5 +16,14 @@ class LedgerVC: AbstractVC {
     }
 
 
+
+
+
+}
+
+//MARK: - AutoSaving
+extension LedgerVC {
+    
+    
 }
 
