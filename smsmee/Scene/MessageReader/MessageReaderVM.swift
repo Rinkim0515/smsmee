@@ -31,7 +31,7 @@ class MessageReaderVM: BaseViewModel<MessageReaderIntent, MessageReaderState> {
         }
         
         saveCurrentData(item: transaction)
-        let savedTimeString = DateFormatter.yearMonthDay.string(from: transaction.transactionDate)
+        let savedTimeString = DateFormatter.yearToDayKR.string(from: transaction.transactionDate)
         updateState(.success("\(savedTimeString) 날짜에 저장되었습니다!"))
     }
     
@@ -69,7 +69,7 @@ class MessageReaderVM: BaseViewModel<MessageReaderIntent, MessageReaderState> {
         
         selectedMonthDay.replace(at: 2, with: "-")
         
-        let dateFormatter = DateFormatter.YMDHM
+        let dateFormatter = DateFormatter.yearToHour
         dateFormatter.timeZone = TimeZone.init(secondsFromGMT: 32400)
         
         let thistime = "\(currentYear)-\(selectedMonthDay) \(selectedTime)"
@@ -92,4 +92,23 @@ class MessageReaderVM: BaseViewModel<MessageReaderIntent, MessageReaderState> {
         
         
     }
+    
+    
 }
+
+struct TransactionItem {
+    let name: String
+    let Amount: Int
+    let isIncom: Bool
+    let transactionDate: Date
+    let memo: String
+    init(name: String = "", Amount: Int = 0, isIncom: Bool = true, transactionDate: Date = Date(), memo: String = "") {
+        self.name = name
+        self.Amount = Amount
+        self.isIncom = isIncom
+        self.transactionDate = transactionDate
+        self.memo = memo
+    }
+}
+
+

@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class LedgerVC: BaseViewController<<#VM: BaseViewModel<Intent, State>#>, <#Intent: BaseIntent#>, <#State: BaseState#>> {
+final class LedgerVC<VM: BaseViewModel<Intent, State>, Intent: BaseIntent, State: BaseState>: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
