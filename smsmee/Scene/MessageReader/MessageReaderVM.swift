@@ -7,16 +7,30 @@
 
 import Foundation
 
+enum MessageReaderIntent: BaseIntent {
+    case saveText(String)
+}
+
+enum MessageReaderState: BaseState {
+    case idle
+    case success(String)
+    case failure(String)
+}
+
+//MARK: - ViewModel
 class MessageReaderVM: BaseViewModel<MessageReaderIntent, MessageReaderState> {
     override func transform() {
         intentSubject
             .subscribe(onNext: { [weak self] intent in
                 guard let self = self else { return }
                 switch intent {
-                case . saveText(let text)
+                case .saveText(let text):
+                    self.handleSave(text)
+                
                     
                 }
             })
+            .disposed(by: disposeBag)
     }
     
     private func handleSave(_ text: String) {
@@ -35,7 +49,7 @@ class MessageReaderVM: BaseViewModel<MessageReaderIntent, MessageReaderState> {
         updateState(.success("\(savedTimeString) 날짜에 저장되었습니다!"))
     }
     
-    private func extractPaymentDetails(from text: String) -> TransactionItem{
+    private func extractPaymentDetails(from text: String) -> TransactionItem?{
         let dateString = RegexManager.shared.extractDate(from: text)
         let timeString = RegexManager.shared.extractTime(from: text)
         let amountString = RegexManager.shared.extractAmount(from: text)

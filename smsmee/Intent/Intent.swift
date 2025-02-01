@@ -23,14 +23,6 @@ enum TransactionIntent {
     
 }
 
-enum MessageReaderIntent: BaseIntent {
-    case saveText(String)
-}
 
-enum MessageReaderState: BaseState {
-    case idle
-    case success(String)
-    case failure(String)
-}
 
 // 모델은 CRUD 만 나머지는 구조체로 

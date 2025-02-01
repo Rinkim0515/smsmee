@@ -26,6 +26,9 @@ class BaseViewController<VM: BaseViewModel<Intent, State>, Intent:BaseIntent, St
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        
+        
     }
     
     func setupUI() {

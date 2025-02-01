@@ -40,7 +40,7 @@
         let window = UIWindow(windowScene: windowScene)
 </string>
 				<key>trailing</key>
-				<string>window.rootViewController = LedgerVC(view: LedgerView())
+				<string>window.rootViewController = MesaageReaderVC(viewModel: MessageReaderVM())
         window.makeKeyAndVisible()
         
 </string>
