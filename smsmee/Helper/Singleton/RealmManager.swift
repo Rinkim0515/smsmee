@@ -10,10 +10,11 @@ import Foundation
 import RealmSwift
 
 protocol Crudable {
-    func create<T: Object>(_ object: T)
-    func read<T: Object>(_ objectType: T.Type) -> Results<T>
-    func update<T: Object>(_ object: T)
-    func delete<T: Object>(_ object: T)
+    associatedtype EntityType: BaseEntity
+    func create(_ object: EntityType)
+    func read(_ objectType: EntityType.Type) -> Results<EntityType>
+    func update(_ object: EntityType)
+    func delete(_ object: EntityType)
 }
 
 class RealmManager {
@@ -70,7 +71,7 @@ extension RealmManager {
 }
 
 
-//MARK: - CRUD
+//MARK: - CUD
 extension RealmManager {
     // ✅ 데이터 생성 (Create)
     func create<T>(_ object: T) where T : Object {
@@ -123,15 +124,25 @@ extension RealmManager {
 
 
 
+class UserManager {
+    static let shared = UserManager()
 
-
-
-
-
-
-
-//MARK: - createUser
-extension RealmManager {
+    private let realm: Realm
+    
+    private init() {
+        /*
+         생성시에 발생할수있는 Crush 는 디스크 공간부족,파일손상등의 이유로 현저히 낮고, Realm 생성이 안된다면 앱을 사용할이유가
+         없기때문에 강제 언랩핑으로 진행하여도 되지만 0% 가 아니라면 안된다.
+         */
+        do {
+            self.realm = try Realm()
+        } catch {
+            fatalError("Failed to initialize Realm: \(error.localizedDescription)")
+        }
+        
+    }
+    
+    
     func getOrCreateUser() -> User {
             if let existingUser = realm.objects(User.self).first {
                 return existingUser //  이미 존재하는 User 반환
@@ -143,10 +154,7 @@ extension RealmManager {
                 return newUser // 새로 생성한 User 반환
             }
         }
-}
-
-//MARK: - Reset All Data
-extension RealmManager {
+    
     func resetRealmDatabase() {
         let defaultRealmPath = Realm.Configuration.defaultConfiguration.fileURL
         
@@ -159,4 +167,11 @@ extension RealmManager {
             }
         }
     }
+    
 }
+
+
+
+
+
+

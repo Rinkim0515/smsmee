@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import RxSwift
 
-class MesaageReaderVC: BaseViewController<MessageReaderVM, MessageReaderIntent, MessageReaderState> {
+final class MesaageReaderVC: BaseViewController<MessageReaderVM, MessageReaderIntent, MessageReaderState> {
     
     private let messageReaderView = MessageReaderView()
     override func viewDidLoad() {

@@ -7,23 +7,34 @@
 
 import UIKit
 
-//final class LedgerVC: BaseViewController<VM: BaseViewModel<Intent, State>, Intent: BaseIntent, State: BaseState> {
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        self.view.backgroundColor = .white
-//        // Do any additional setup after loading the view.
-//    }
-//
-//
-//
-//
-//
-//}
+import SnapKit
+import RxSwift
 
-//MARK: - AutoSaving
-//extension LedgerVC {
-//    
-//    
-//}
+final class LedgerVC: BaseViewController<LedgerVM, LedgerIntent, LedgerState> {
+
+    private let ledgerView = LedgerView()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.view.backgroundColor = .white
+        setupUI()
+    }
+    
+    override func setupUI() {
+        view.addSubview(ledgerView)
+        ledgerView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+
+    override func render(state: LedgerState) {
+        <#code#>
+    }
+
+
+
+
+}
+
+
 

@@ -8,18 +8,26 @@
 import Foundation
 enum LedgerIntent: BaseIntent {
     case loadBudgetVC
-    case loadSomeDayTransaction
-    case loadMessageVC
+    case loadMovingdateVC
+    case loadprevMonthView
+    case loadnextMonthView
+    case loadchartView
     case createTransaction
     
 }
 enum LedgerState: BaseState {
     case idle
     
+    
 }
 
 
 class LedgerVM: BaseViewModel<LedgerIntent, LedgerState> {
+    
+    override func transform() {
+        <#code#>
+    }
+    
     
 }
 
