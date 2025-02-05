@@ -25,7 +25,7 @@ enum LedgerState: BaseState {
 class LedgerVM: BaseViewModel<LedgerIntent, LedgerState> {
     
     override func transform() {
-        <#code#>
+        
     }
     
     

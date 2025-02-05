@@ -28,7 +28,7 @@ final class LedgerVC: BaseViewController<LedgerVM, LedgerIntent, LedgerState> {
     }
 
     override func render(state: LedgerState) {
-        <#code#>
+        
     }
 
 
