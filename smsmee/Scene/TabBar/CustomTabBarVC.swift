@@ -23,7 +23,7 @@ class CustomTabBarController: UIViewController {
         
         setupChildViewControllers()
         setupCustomTabBar()
-        bindTabBar()
+        bindViewModel()
     }
     
     private func setupChildViewControllers() {
@@ -46,16 +46,17 @@ class CustomTabBarController: UIViewController {
         switchViewController(to: .home) // 초기 화면을 홈으로 설정
     }
     
-    private func bindTabBar() {
-        tabBarView.tabSelected
-            .emit(onNext: { [weak self] tab in
+    private func bindViewModel() {
+        tabBarView.viewModel.state
+            .map { $0.selectedTab }
+            .distinctUntilChanged()
+            .drive(onNext: { [weak self] tab in
                 self?.switchViewController(to: tab)
-                self?.tabBarView.selectTab(tab) // 🔥 현재 선택된 탭 업데이트
             })
             .disposed(by: disposeBag)
     }
     
-    private func switchViewController(to tab: CustomTabBar.Tab) {
+    private func switchViewController(to tab: TabBarState.Tab) {
         children.forEach { $0.view.removeFromSuperview(); $0.removeFromParent() }
         
         let selectedVC: UIViewController = {
@@ -66,7 +67,7 @@ class CustomTabBarController: UIViewController {
             case .profile: return profileVC
             }
         }()
-        
+
         addChild(selectedVC)
         view.insertSubview(selectedVC.view, belowSubview: tabBarView)
         selectedVC.view.frame = view.bounds

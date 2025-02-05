@@ -14,36 +14,21 @@ import SnapKit
 class CustomTabBar: UIView {
     
     private let disposeBag = DisposeBag()
-    
-    enum Tab: Int, CaseIterable {
-        case home, search, notifications, profile
-        
-        var iconName: String {
-            switch self {
-            case .home: return "house.fill"
-            case .search: return "magnifyingglass"
-            case .notifications: return "bell"
-            case .profile: return "person"
-            }
-        }
-    }
-    
     private var buttons: [UIButton] = []
     
-    private let selectedTabRelay = BehaviorRelay<Tab>(value: .home) // 🔥 현재 선택된 탭 (Driver)
-    var selectedTab: Driver<Tab> { return selectedTabRelay.asDriver() }
-
-    private let tabSelectedRelay = PublishRelay<Tab>() // 🔥 버튼 클릭 이벤트 (Signal)
-    var tabSelected: Signal<Tab> { return tabSelectedRelay.asSignal() }
-
+    // 🚀 ViewModel 연결
+    let viewModel = TabBarViewModel()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        bindViewModel()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupUI()
+        bindViewModel()
     }
 
     private func setupUI() {
@@ -66,24 +51,35 @@ class CustomTabBar: UIView {
             make.bottom.equalToSuperview().offset(-10)
         }
 
-        for tab in Tab.allCases {
+        for tab in TabBarState.Tab.allCases {
             let button = UIButton(type: .system)
             button.tag = tab.rawValue
             button.setImage(UIImage(systemName: tab.iconName), for: .normal)
             button.tintColor = .black
-
+            
+            // 🚀 버튼 클릭 → Intent 전달
             button.rx.tap
-                .map { tab }
-                .bind(to: tabSelectedRelay) // 🔥 버튼이 클릭되면 이벤트 발생
+                .map { TabBarIntent.selectTab(tab) }
+                .bind(to: viewModel.intentRelay)
                 .disposed(by: disposeBag)
 
             buttons.append(button)
             stackView.addArrangedSubview(button)
         }
     }
+    
+    private func bindViewModel() {
+        viewModel.state
+            .map { $0.selectedTab }
+            .drive(onNext: { [weak self] selectedTab in
+                self?.updateUI(selectedTab)
+            })
+            .disposed(by: disposeBag)
+    }
 
-    /// 🚀 선택된 탭을 변경하는 메서드
-    func selectTab(_ tab: Tab) {
-        selectedTabRelay.accept(tab) // 🔥 현재 탭 상태 변경
+    private func updateUI(_ selectedTab: TabBarState.Tab) {
+        for (index, button) in buttons.enumerated() {
+            button.tintColor = index == selectedTab.rawValue ? .red : .black
+        }
     }
 }
