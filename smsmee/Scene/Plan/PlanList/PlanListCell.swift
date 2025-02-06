@@ -22,10 +22,7 @@ class PlanListCell: UICollectionViewCell, CellReusable {
         fatalError("init(coder:) has not been implemented")
     }
     
-
-
     
-
 }
 
 //MARK: - Rendering
@@ -41,13 +38,11 @@ extension PlanListCell {
             make.centerY.equalToSuperview()
             make.width.equalToSuperview().multipliedBy(0.5)
         }
-        
         dDayLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel.snp.trailing).offset(8)
             make.centerY.equalToSuperview()
             make.width.equalTo(60)
         }
-        
         amountLabel.snp.makeConstraints { make in
             make.leading.equalTo(dDayLabel.snp.trailing).offset(8)
             make.trailing.equalToSuperview().offset(-8)

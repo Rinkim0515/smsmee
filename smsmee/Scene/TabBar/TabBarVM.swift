@@ -10,31 +10,33 @@
 import Foundation
 import RxSwift
 import RxCocoa
+/*
+ Intent를 수신하고, State를 변경
+ 
+ */
 
-class TabBarViewModel {
+class TabBarViewModel: BaseViewModel<TabBarIntent, TabBarState> {
     
-    private let intentRelay = PublishRelay<TabBarIntent>()
-    private let stateRelay: BehaviorRelay<TabBarState>
-    
-    var state: Driver<TabBarState> { stateRelay.asDriver() }
-    
-    private let disposeBag = DisposeBag()
-    
-    init() {
-        stateRelay = BehaviorRelay(value: TabBarState(selectedTab: .home))
+    override func transform() {
+        self.stateRelay.accept(.myPage)
         
+        //intent 발생시
         intentRelay
-            .compactMap { intent -> TabBarState.Tab? in
+            .compactMap { intent -> TabBarState? in
                 switch intent {
-                case .selectTab(let tab): return tab
+                    // intent에 state를 포함해서 전달
+                case .selectTab(let tab):
+                    print("📢 Intent 수신됨: \(tab)") // 디버깅 로그
+                    return tab
                 }
             }
-            .map { TabBarState(selectedTab: $0) }
+        //stateRelay에 전달
             .bind(to: stateRelay)
-            .disposed(by: disposeBag)
+            .disposed(by: self.disposeBag)
     }
     
     func process(intent: TabBarIntent) {
+        print("📢 process(intent:) 실행됨: \(intent)") // 디버깅 로그
         intentRelay.accept(intent)
     }
 }

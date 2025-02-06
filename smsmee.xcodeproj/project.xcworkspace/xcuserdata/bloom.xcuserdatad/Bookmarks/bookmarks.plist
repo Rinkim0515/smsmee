@@ -40,7 +40,7 @@
         let window = UIWindow(windowScene: windowScene)
 </string>
 				<key>trailing</key>
-				<string>window.rootViewController = CustomTabBarController()
+				<string>window.rootViewController = CustomTabBarController(viewModel: TabBarViewModel())
         window.makeKeyAndVisible()
         
 </string>

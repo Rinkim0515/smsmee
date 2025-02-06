@@ -11,16 +11,35 @@ import UIKit
 import RxSwift
 import SnapKit
 
-class CustomTabBarController: UIViewController {
+class CustomTabBarController: UIViewController, ViewModelBindable {
+
+    
+    typealias VM = TabBarViewModel
+    typealias Intent = TabBarIntent
+    typealias State = TabBarState
+    
+    let viewModel: TabBarViewModel
+    let disposeBag = DisposeBag()
+    
     private let tabBarView = CustomTabBar()
-    private let viewModel = TabBarViewModel()
-    private let disposeBag = DisposeBag()
     
-    private let homeVC = MessageReaderVC(viewModel: MessageReaderVM())
+    //private let tabBarView = CustomTabBar()
+    //private let viewModel = TabBarViewModel()
+    //private let disposeBag = DisposeBag()
     
-    private let searchVC = TestViewController1()
-    private let notificationsVC = UIViewController()
-    private let profileVC = UIViewController()
+    private let myPageVC = MessageReaderVC(viewModel: MessageReaderVM())
+    private let ledgerVC = UIViewController()
+    private let graphVC = UIViewController()
+    private let planVC = PlanListVC()
+    
+    init(viewModel: TabBarViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,19 +47,29 @@ class CustomTabBarController: UIViewController {
         setupChildViewControllers()
         setupCustomTabBar()
         bindViewModel()
-
-        // 🚀 최초 실행 시 `home` 화면으로 이동
-        switchViewController(to: .home)
+        switchViewController(to: .myPage)
     }
+    
+
+
+    
+
+    
+
+}
+
+//MARK: - Rendering
+extension CustomTabBarController {
+    
     
     private func setupChildViewControllers() {
-        homeVC.view.backgroundColor = .white
-        searchVC.view.backgroundColor = .white
-        notificationsVC.view.backgroundColor = .white
-        profileVC.view.backgroundColor = .white
-    }
-    
-    private func setupCustomTabBar() {
+        [
+            myPageVC,
+            ledgerVC,
+            graphVC,
+            planVC
+        ].forEach { $0.view.backgroundColor = .white}
+        
         view.addSubview(tabBarView)
         let tabBarHeight = max(60, min(view.frame.height * 0.1, 100))
         
@@ -49,53 +78,67 @@ class CustomTabBarController: UIViewController {
             make.bottom.equalToSuperview()
             make.height.equalTo(tabBarHeight)
         }
+
+    }
+    
+    private func setupCustomTabBar() {
+
         
-        // 🚀 `ViewController`에서 버튼을 가져와 직접 이벤트 감지
         let buttons = tabBarView.getButtons()
         
         for (index, button) in buttons.enumerated() {
-            button.tag = index // 🚀 각 버튼에 태그를 부여
+            button.tag = index
             
-            // ✅ `UIAction`을 사용하여 이벤트 처리 (가독성 향상)
-            button.addAction(UIAction { [weak self] _ in
-                guard let tab = TabBarState.Tab(rawValue: index) else { return }
-                self?.viewModel.process(intent: .selectTab(tab))
+            button.addAction( UIAction { [weak self] _ in
+                guard let self = self, let tab = TabBarState(rawValue: index) else { return }
+                
+                self.viewModel.process(intent: .selectTab(tab))
             }, for: .touchUpInside)
         }
     }
-    
-    private func switchViewController(to tab: TabBarState.Tab) {
-        print("🔄 switchViewController 호출됨: \(tab)") // 🚀 디버깅용 로그 추가
+}
 
+extension CustomTabBarController {
+    // Tab to Change
+    private func switchViewController(to tab: TabBarState) {
         children.forEach { $0.view.removeFromSuperview(); $0.removeFromParent() }
-
         let selectedVC: UIViewController
         switch tab {
-        case .home:
-            selectedVC = homeVC
-        case .search:
-            selectedVC = searchVC
-        case .notifications:
-            selectedVC = notificationsVC
-        case .profile:
-            selectedVC = profileVC
+        case .myPage:
+            selectedVC = myPageVC
+        case .ledger:
+            selectedVC = ledgerVC
+        case .graph:
+            selectedVC = graphVC
+        case .plan:
+            selectedVC = planVC
+        case .idle:
+            selectedVC = myPageVC
         }
 
         addChild(selectedVC)
         view.insertSubview(selectedVC.view, belowSubview: tabBarView)
         selectedVC.view.frame = view.bounds
         selectedVC.didMove(toParent: self)
-
-        print("✅ 화면 전환 완료: \(tab)") // 🚀 디버깅용 로그 추가
+        
     }
-
-    private func bindViewModel() {
-        viewModel.state
-            .map { $0.selectedTab.rawValue }
-            .distinctUntilChanged()
-            .drive(onNext: { [weak self] index in
-                self?.tabBarView.updateUI(selectedIndex: index)
-            })
-            .disposed(by: disposeBag)
+    // 여기서 Driver를 구독해서 변경해줌
+//    func bindViewModel() {
+//            viewModel.state
+//                .map { $0.rawValue }
+//                
+//                .drive(onNext: { [weak self] index in
+//                    guard let tab = TabBarState(rawValue: index) else { return }
+//                    print("🔄 ViewModel 상태 변경 감지: \(tab)") // 디버깅 로그 추가
+//                    self?.tabBarView.updateUI(selectedIndex: index)
+//                    self?.switchViewController(to: tab)
+//                })
+//                .disposed(by: disposeBag)
+//        }
+    
+    func render(state: TabBarState) {
+        print("🔄 ViewModel 상태 변경 감지: \(state)") // 디버깅 로그 추가
+        tabBarView.updateUI(selectedIndex: state.rawValue) // ✅ UI 업데이트
+        switchViewController(to: state)
     }
 }

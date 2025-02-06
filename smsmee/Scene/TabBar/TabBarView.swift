@@ -42,7 +42,7 @@ class CustomTabBar: UIView {
             make.bottom.equalToSuperview().offset(-10)
         }
 
-        let tabIcons = ["house.fill", "magnifyingglass", "bell", "person"]
+        let tabIcons = ["person.fill", "doc.fill", "chart.bar.fill", "calendar"]
         
         for icon in tabIcons {
             let button = UIButton(type: .system)
@@ -54,15 +54,15 @@ class CustomTabBar: UIView {
         }
     }
 
-    // 🚀 `ViewController`가 버튼을 직접 제어할 수 있도록 버튼 배열을 반환
     func getButtons() -> [UIButton] {
         return buttons
     }
 
-    // 🚀 UI 업데이트 (선택된 버튼만 강조)
     func updateUI(selectedIndex: Int) {
         for (index, button) in buttons.enumerated() {
             button.tintColor = index == selectedIndex ? .red : .black
         }
     }
+    
+    // 여기에 애니메이션 효과를 넣어서 updateUI에 넣으면 될듯
 }

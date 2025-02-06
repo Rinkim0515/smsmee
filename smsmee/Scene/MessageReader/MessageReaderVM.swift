@@ -20,7 +20,7 @@ enum MessageReaderState: BaseState {
 //MARK: - ViewModel
 class MessageReaderVM: BaseViewModel<MessageReaderIntent, MessageReaderState> {
     override func transform() {
-        intentSubject
+        intentRelay
             .subscribe(onNext: { [weak self] intent in
                 guard let self = self else { return }
                 switch intent {

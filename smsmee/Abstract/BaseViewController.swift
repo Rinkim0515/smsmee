@@ -51,3 +51,27 @@ class BaseViewController<VM: BaseViewModel<Intent, State>, Intent:BaseIntent, St
 
     
 }
+
+
+
+protocol ViewModelBindable {
+    associatedtype Intent: BaseIntent
+    associatedtype State: BaseState
+    associatedtype VM: BaseViewModel<Intent, State>
+
+    var viewModel: VM { get }
+    var disposeBag: DisposeBag { get }
+    
+    func bindViewModel()
+    func render(state: State)
+}
+
+extension ViewModelBindable where Self: UIViewController {
+    func bindViewModel() {
+        viewModel.state
+            .drive(onNext: { [weak self] state in
+                self?.render(state: state)
+            })
+            .disposed(by: disposeBag)
+    }
+}
