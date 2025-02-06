@@ -5,32 +5,23 @@
 //  Created by KimRin on 1/26/25.
 //
 
-
 import UIKit
-import RxSwift
-import RxCocoa
 import SnapKit
 
 class CustomTabBar: UIView {
     
-    private let disposeBag = DisposeBag()
     private var buttons: [UIButton] = []
-    
-    // 🚀 ViewModel 연결
-    let viewModel = TabBarViewModel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
-        bindViewModel()
     }
-
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupUI()
-        bindViewModel()
     }
-
+    
     private func setupUI() {
         backgroundColor = .white
         layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -51,35 +42,27 @@ class CustomTabBar: UIView {
             make.bottom.equalToSuperview().offset(-10)
         }
 
-        for tab in TabBarState.Tab.allCases {
+        let tabIcons = ["house.fill", "magnifyingglass", "bell", "person"]
+        
+        for icon in tabIcons {
             let button = UIButton(type: .system)
-            button.tag = tab.rawValue
-            button.setImage(UIImage(systemName: tab.iconName), for: .normal)
+            button.setImage(UIImage(systemName: icon), for: .normal)
             button.tintColor = .black
             
-            // 🚀 버튼 클릭 → Intent 전달
-            button.rx.tap
-                .map { TabBarIntent.selectTab(tab) }
-                .bind(to: viewModel.intentRelay)
-                .disposed(by: disposeBag)
-
             buttons.append(button)
             stackView.addArrangedSubview(button)
         }
     }
-    
-    private func bindViewModel() {
-        viewModel.state
-            .map { $0.selectedTab }
-            .drive(onNext: { [weak self] selectedTab in
-                self?.updateUI(selectedTab)
-            })
-            .disposed(by: disposeBag)
+
+    // 🚀 `ViewController`가 버튼을 직접 제어할 수 있도록 버튼 배열을 반환
+    func getButtons() -> [UIButton] {
+        return buttons
     }
 
-    private func updateUI(_ selectedTab: TabBarState.Tab) {
+    // 🚀 UI 업데이트 (선택된 버튼만 강조)
+    func updateUI(selectedIndex: Int) {
         for (index, button) in buttons.enumerated() {
-            button.tintColor = index == selectedTab.rawValue ? .red : .black
+            button.tintColor = index == selectedIndex ? .red : .black
         }
     }
 }

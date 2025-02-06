@@ -20,9 +20,14 @@ class UIFactory {
     }
     
     // 버튼 타이틀은 볼드 처리로하고 일반텍스트는 그냥쓰자
-    static func makeLabel(title: String, textColor: UIColor, textSize: CGFloat,isBold: Bool = false) -> UILabel {
+    static func makeLabel(title: String,
+                          textColor: UIColor = .black,
+                          textSize: CGFloat,
+                          align: NSTextAlignment = .left,
+                          isBold: Bool = false) -> UILabel {
+        
         let label = UILabel()
-        label.textAlignment = .left
+        label.textAlignment = align
         label.text = title
         label.textColor = textColor
         
