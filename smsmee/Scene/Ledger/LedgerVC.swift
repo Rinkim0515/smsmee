@@ -10,7 +10,15 @@ import UIKit
 import SnapKit
 import RxSwift
 
-final class LedgerVC: BaseViewController<LedgerVM, LedgerIntent, LedgerState> {
+final class LedgerVC: UIViewController, ViewModelBindable {
+    typealias Intent = <#type#>
+    
+    typealias State = <#type#>
+    
+    typealias VM = <#type#>
+    
+    var disposeBag: RxSwift.DisposeBag
+    
 
     private let ledgerView = LedgerView()
     

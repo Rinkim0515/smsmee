@@ -35,6 +35,7 @@ class CustomTabBar: UIView {
         stackView.distribution = .equalSpacing
 
         addSubview(stackView)
+        
         stackView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(40)
             make.trailing.equalToSuperview().offset(-40)

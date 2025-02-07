@@ -23,9 +23,7 @@ class CustomTabBarController: UIViewController, ViewModelBindable {
     
     private let tabBarView = CustomTabBar()
     
-    //private let tabBarView = CustomTabBar()
-    //private let viewModel = TabBarViewModel()
-    //private let disposeBag = DisposeBag()
+
     
     private let myPageVC = MessageReaderVC(viewModel: MessageReaderVM())
     private let ledgerVC = UIViewController()
