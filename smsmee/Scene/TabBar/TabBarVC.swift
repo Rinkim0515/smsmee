@@ -26,9 +26,9 @@ class CustomTabBarController: UIViewController, ViewModelBindable {
 
     
     private let myPageVC = MessageReaderVC(viewModel: MessageReaderVM())
-    private let ledgerVC = UIViewController()
-    private let graphVC = UIViewController()
-    private let planVC = PlanListVC()
+    private let ledgerVC = LedgerVC(viewModel: LedgerVM())
+    private let graphVC = PlanListVC()
+    private let planVC = UIViewController()
     
     init(viewModel: TabBarViewModel) {
         self.viewModel = viewModel
@@ -76,11 +76,9 @@ extension CustomTabBarController {
             make.bottom.equalToSuperview()
             make.height.equalTo(tabBarHeight)
         }
-
     }
     
     private func setupCustomTabBar() {
-
         
         let buttons = tabBarView.getButtons()
         
@@ -120,19 +118,6 @@ extension CustomTabBarController {
         selectedVC.didMove(toParent: self)
         
     }
-    // 여기서 Driver를 구독해서 변경해줌
-//    func bindViewModel() {
-//            viewModel.state
-//                .map { $0.rawValue }
-//                
-//                .drive(onNext: { [weak self] index in
-//                    guard let tab = TabBarState(rawValue: index) else { return }
-//                    print("🔄 ViewModel 상태 변경 감지: \(tab)") // 디버깅 로그 추가
-//                    self?.tabBarView.updateUI(selectedIndex: index)
-//                    self?.switchViewController(to: tab)
-//                })
-//                .disposed(by: disposeBag)
-//        }
     
     func render(state: TabBarState) {
         print("🔄 ViewModel 상태 변경 감지: \(state)") // 디버깅 로그 추가

@@ -15,7 +15,7 @@ class BaseViewModel<Intent: BaseIntent, State: BaseState> {
     // Intent를 처리하는 Subject
     let intentRelay = PublishRelay<Intent>()
     // State를 관리 하는 Relay
-    let stateRelay = BehaviorRelay<State>(value: State.idle)
+    let stateRelay = BehaviorRelay<State>(value: State.idle) // 강제 초기설정값 (어떠한 스테이트도 아닌상태)
     
     var state: Driver<State> { stateRelay.asDriver() }
     /*

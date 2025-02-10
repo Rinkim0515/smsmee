@@ -8,13 +8,16 @@
 import Foundation
 
 enum LedgerIntent: BaseIntent {
+    case tapDate
+    case tapCell(Date)
     case tapBudget
-    case tapCellDetail
-    case tap
+    
 }
 
 enum LedgerState: BaseState {
     case idle
+    
+    
     
     
 }

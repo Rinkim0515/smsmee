@@ -9,7 +9,7 @@ import Foundation
 
 protocol BaseIntent {}
 protocol BaseState {
-    static var idle: Self { get }
+    static var idle: Self { get } // 초기 상태를 의미하는
 }
 
 

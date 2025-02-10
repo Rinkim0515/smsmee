@@ -18,7 +18,8 @@ enum TabBarState: Int, BaseState {
     case ledger
     case graph
     case plan
-    case idle // 호출될일은 없을것으로 예상
+    
+    case idle
 }
 
 
