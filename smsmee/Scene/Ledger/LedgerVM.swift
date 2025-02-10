@@ -3,7 +3,7 @@
 //  smsmee
 //
 //  Created by KimRin on 2/1/25.
-//
+// 여기서 모든 로직이 완료 되어야함 Cell 에 데이터넣어주기 전처리를 여기서 해야하고
 
 import RxSwift
 import RxCocoa
@@ -13,17 +13,19 @@ import Foundation
 
 class LedgerVM: BaseViewModel<LedgerIntent, LedgerState> {
     
+    private let dateManager = DateManager.shared
+    private let realmManger = RealmManager.shared
+    
     var calendarItems = BehaviorRelay<[CalendarItem]>(value: [] )
     var currentDate = BehaviorRelay<Date>(value: Date())
-    
-    private let dateManager = DateManager.shared
+    var dailyTransaction: [DailyTotalTransaction] = []
     
     
     private var calendar = Calendar.current
     
     override func transform() {
         
-        calendarItems.accept(initCalendar())
+        calendarItems.accept(configureCalendarItems(currentMonth: self.currentDate.value))
         intentRelay
             .subscribe(onNext: { [weak self] intent in
 //                switch intent {
@@ -33,61 +35,103 @@ class LedgerVM: BaseViewModel<LedgerIntent, LedgerState> {
             })
             .disposed(by: self.disposeBag)
     }
-    
-    
-    
-    private func updateCalendar() {
-//        let date = DateFormatter.yearToMonthKR.string(from: self.calendarDate)
-//
-//        let temp = DateManager.shared.configureDays(currentMonth: calendarDate)
-//        let thisMonth = calendar.component(.month, from: calendarDate)
-//        var sectionCount = 0
-//        calendarItems.bind(onNext: { _ in
-//            <#code#>
-//        })
-//        
-//        = temp.map { i in
-//            let weekDay = DateManager.shared.getWeekday(month: i)
-//            //주차 할당
-//            let calendar = CalendarItem(date: i,
-//                                        isThisMonth: calendar.component(.month, from: i) == thisMonth, weekSection: sectionCount )
-//
-//            if weekDay == 7 {
-//                sectionCount += 1
-//            }
-//
-//            return calendar
-        }
-        
-        func initCalendar() -> [CalendarItem] {
-            let temp = dateManager.configureDays(currentMonth: currentDate.value)
-            var calendar = CalendarItem()
-            var calendars = [CalendarItem]()
-            
-            for i in temp {
-                calendar.date = i
-                calendars.append(calendar)
-            }
 
-            return calendars
-    }
     
-    func configureDays (currentMonth: Date) -> [Date] {
+    func configureCalendarItems(currentMonth: Date) -> [CalendarItem] {
+
+        var calendarItems: [CalendarItem] = []
         
-        var totalDays: [Date] = []
+        
         
         let firstDayInMonth = dateManager.getFirstDayInMonth(date: currentMonth)
         let firstWeekday = dateManager.getFirstWeekday(for: currentMonth)
         let lastMonthOfStart = dateManager.moveToSomeday(when: firstDayInMonth, howLong: -firstWeekday + 1)
-        //42개의 셀을 위함
+        let thisMonth: Int = calendar.component(.month, from: currentDate.value)
+        
         for i in 0 ..< 42 {
-            totalDays.append(dateManager.moveToSomeday(when: lastMonthOfStart, howLong: i))
+            let date = dateManager.moveToSomeday(when: lastMonthOfStart, howLong: i)
+            let dayBudget: Int = 0
+            var isThisMonth = false // +
+            var weekSection: Int = 0 // ++
+            var totalIncome: Int = 0
+            var totalExpense: Int = 0
+            var totalAmount: Int = 0
+            let dayType = dateManager.getDayOfWeek(date: date)
+            
+            
+            
+            // 지출내역에 대한 총합산을 불러오는 메서드
+            let amount = getAmount(date: date)
+            totalIncome = amount.totalIncome
+            totalExpense = amount.totalExpense
+            totalAmount = totalIncome - totalExpense
+            
+            //이번달이 맞는지, 각주별 섹션 설정
+            if thisMonth == calendar.component(.month, from: date) {
+                isThisMonth = true
+                
+                if dayType == .Sunday {
+                    weekSection += 1
+                }
             }
-        return totalDays
+            // 월별예산안에 대한 데이터 호출
+            
+            
+            //생성된 데이터 구조체
+            var calendarItem = CalendarItem()
+            calendarItem.date = date
+            calendarItem.isThisMonth = isThisMonth
+            calendarItem.weekSection = weekSection
+            calendarItem.totalIncome = totalIncome
+            calendarItem.totalExpense = totalExpense
+            calendarItem.totalAmount = totalAmount
+            calendarItem.dayType = dayType
+            calendarItem.dayBudget = dayBudget
+            
+            calendarItems.append(calendarItem)
+                
+            
+            
+
+       }
+        return calendarItems
+        
+        
     }
     
+    func getAmount(date:Date) -> (totalIncome: Int, totalExpense: Int) {
+        let startTime = dateManager.getDayOfStart(date: date)
+        let endTime = dateManager.getDayOfEnd(date: date)
+        var totalIncome = 0
+        var totalExpense = 0
+        for i in realmManger.fetchDiaryBetweenDates(startTime, endTime) {
+            if i.isIncome {
+                totalIncome += Int(i.amount)
+            } else {
+                totalExpense += Int(i.amount)
+            }
+        }
+        return (totalIncome, totalExpense)
+    }
     
+
     
 }
 
 
+extension LedgerVM {
+    // 여기에서 Cell이 주말인지 아닌지 , 각 수입과,지출,합산금액은 얼마인지 계산을 한후 뿌려줘야함
+    func getCellData(date: Date){
+        
+        
+    }
+}
+
+struct DailyTotalTransaction {
+    
+    let totalIncome: Int
+    let totalExpense: Int
+    var total: Int {
+        totalIncome - totalExpense
+    }
+}

@@ -14,7 +14,7 @@ import UIKit
 import SnapKit
 
 final class CalendarCell: UICollectionViewCell, CellReusable {
-    
+    private let dateManager = DateManager.shared
     var todayItem: CalendarItem?
     let dayLabel = UIFactory.makeLabel(title: "1", textSize: 18)
     
@@ -55,38 +55,39 @@ final class CalendarCell: UICollectionViewCell, CellReusable {
     }
     
     func updateDate(with item: CalendarItem) {
-        
-        self.todayItem = item
-//        isThisMonth(today: item)
-//        isToday(currentDay: item.date)
-        dayLabel.text = dateStringFormatter(date: item.date)
-
-        //여기에서. 섹션 검사를 해야할듯
-        if item.date < Date() {
+        let dayString = dateStringFormatter(date: item.date)
+        self.dayLabel.text = dayString
+        if !item.isThisMonth {
+            validation()
+        } else {
+            switch item.dayType {
+            case .Saturday:
+                self.dayLabel.textColor = .primaryBlue
+            case .Sunday:
+                self.dayLabel.textColor = .systemRed
+            default:
+                self.dayLabel.textColor = .black
+            }
             
-           
-             if isSameWeekAsToday(date: item.date) {
-                 self.backgroundColor = .white
-            }
-            else {
-                self.backgroundColor = item.backgroundColor
-            }
+            self.incomeLabel.text = item.totalIncome == 0 ? "" : "\(item.totalIncome)"
+            self.expenseLabel.text =  item.totalExpense == 0 ? "" : "\(item.totalExpense)"
+            self.totalAmountLabel.text =  item.totalAmount == 0 ? "" : "\(item.totalAmount)"
+            
         }
-        
-//        let temp = RealmManager.shared.fetchDiaryBetweenDates()
-//        
-//        
-//        let (income, expense) = temp.reduce((0, 0)) { accumulator, i in
-//            i.statement ? (accumulator.0 + Int(i.amount), accumulator.1) : (accumulator.0, accumulator.1 + Int(i.amount)) }
-//        
-//        let totalAmount = income - expense
-//        if item.isThisMonth {
-//            self.expenseLabel.text = expense == 0 ? "" : "\(expense)"
-//            self.incomeLabel.text = income == 0 ? "" : "\(income)"
-//            self.totalAmountLabel.text = totalAmount == 0 ? "" : "\(totalAmount)"
-//        }
+
+
         
     }
+    
+    func validation() {
+        dayLabel.textColor = self.dayLabel.textColor.withAlphaComponent(0.4)
+        incomeLabel.text = ""
+        expenseLabel.text = ""
+        totalAmountLabel.text = ""
+    }
+    
+    //어떻게 나눌것이냐. -> 다 통일해서 화면을 그릴때 다 호출하는ㅈ 방향으로 진행하자
+
     
     
     private func dateStringFormatter(date: Date) -> String {
@@ -98,15 +99,15 @@ final class CalendarCell: UICollectionViewCell, CellReusable {
         
     }
     
-
     
     
-
     
     
-
     
-
+    
+    
+    
+    
     
     
 }
@@ -139,9 +140,9 @@ extension CalendarCell {
             $0.centerX.equalTo(self.snp.centerX)
             $0.height.equalTo(30)
         }
-
+        
     }
-
+    
 }
 
 //MARK: - Calculation
@@ -157,38 +158,16 @@ extension CalendarCell {
         return todayWeekRange == dateWeekRange
     }
     
-//    private func isThisMonth(today: CalendarItem) {
-//        let weekday = DateManager.shared.getWeekday(month: today.date)
-//        
-//        switch weekday {
-//        case 1:
-//            self.dayLabel.textColor = .systemRed
-//        case 7:
-//            
-//            self.dayLabel.textColor = .systemBlue
-//        default:
-//            self.dayLabel.textColor = .black
-//        }
-//        
-//        if today.isThisMonth != true {
-//            dayLabel.textColor = self.dayLabel.textColor.withAlphaComponent(0.4)
-//            incomeLabel.text = ""
-//            expenseLabel.text = ""
-//            totalAmountLabel.text = ""
-//            }
-//        
-//
-//    }
-    
-//    private func isToday(currentDay: Date) {
-//        let today = DateManager.shared.transformDateWithoutTime(date: Date())
-//        if currentDay == today {
-//            self.layer.borderColor = UIColor.red.cgColor
-//            self.layer.borderWidth = 0.5
-//        }
-//        else {
-//            self.layer.borderColor = UIColor.gray.cgColor
-//            self.layer.borderWidth = 0.2
-//        }
-//    }
+    // 당일 날짜 표시 기능
+        private func isToday(currentDay: Date) {
+            let today = dateManager.transformDateWithoutTime(date: Date())
+            if currentDay == today {
+                self.layer.borderColor = UIColor.red.cgColor
+                self.layer.borderWidth = 0.5
+            }
+            else {
+                self.layer.borderColor = UIColor.gray.cgColor
+                self.layer.borderWidth = 0.2
+            }
+        }
 }

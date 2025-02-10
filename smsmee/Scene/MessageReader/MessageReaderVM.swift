@@ -94,14 +94,14 @@ class MessageReaderVM: BaseViewModel<MessageReaderIntent, MessageReaderState> {
     }
     
     func saveCurrentData(item: TransactionItem) {
-        
-        let date = item.transactionDate
-        let amount = Int64(item.Amount)
-        let statement = item.isIncom
-        let titleTextField = item.name
-        let categoryTextField = ""
-        let memo = item.memo
-        
+//        
+//        let date = item.transactionDate
+//        let amount = Int64(item.Amount)
+//        let statement = item.isIncom
+//        let titleTextField = item.name
+//        let categoryTextField = ""
+//        let memo = item.memo
+//        
 
         
         

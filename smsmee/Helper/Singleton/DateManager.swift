@@ -74,7 +74,8 @@ final class DateManager {
         return lastDayInMonth
     }
     
-    func getStartOfDayTime(date: Date) -> Date {
+    //들어온 Date의 시간을 하루의 시작인 시간으로
+    func getDayOfStart(date: Date) -> Date {
         let someday = calendar.component(.day, from: date)
         dateComponents.day = someday
         make000000()
@@ -85,11 +86,8 @@ final class DateManager {
         }
         return startOfDay
     }
-    
-    
-    
-    //
-    func getEndofDayTime(date: Date) -> Date {
+    //들어온 Date의 시간을 하루의 끝인 시간시점으로
+    func getDayOfEnd(date: Date) -> Date {
         let someday = calendar.component(.day, from: date)
         dateComponents.day = someday
         make235959()
@@ -138,7 +136,7 @@ final class DateManager {
     //해당달의 첫째날짜의 요일구하기
     func getFirstWeekday(for month: Date) -> Int {
         let currentMonth = getFirstDayInMonth(date: month)
-        let weekdayValue = getWeekday(month: currentMonth)
+        let weekdayValue = getWeekday(day: currentMonth)
         return weekdayValue
     }
     
@@ -152,8 +150,8 @@ final class DateManager {
     }
     
     //요일구하기
-    func getWeekday(month: Date) -> Int { // 그냥 요일임 그달의 요일이 아니라
-        return self.calendar.component(.weekday, from: month)
+    func getWeekday(day: Date) -> Int { // 그냥 요일임 그달의 요일이 아니라
+        return self.calendar.component(.weekday, from: day)
     }
     
     
@@ -179,5 +177,30 @@ final class DateManager {
         let endOfDay = calendar.startOfDay(for: end)
         dateComponents = calendar.dateComponents([.day], from: startOfDay, to: endOfDay)
         return dateComponents.day
+    }
+    
+    func getDayOfWeek(date: Date) -> dayType {
+        let num = getWeekday(day: date)
+        
+        switch num {
+        case 1:
+            return .Sunday
+        case 2:
+            return .Monday
+        case 3:
+            return .Tuesday
+        case 4:
+            return .Wednesday
+        case 5:
+            return .Thursday
+        case 6:
+            return .Friday
+        case 7:
+            return .Saturday
+        default:
+            return .Sunday
+        }
+        
+        
     }
 }

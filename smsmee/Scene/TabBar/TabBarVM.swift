@@ -18,7 +18,7 @@ import RxCocoa
 class TabBarViewModel: BaseViewModel<TabBarIntent, TabBarState> {
     
     override func transform() {
-        self.stateRelay.accept(.myPage)
+        self.stateRelay.accept(.ledger)
         
         //intent 발생시
         intentRelay

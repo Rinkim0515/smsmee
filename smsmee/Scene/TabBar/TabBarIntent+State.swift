@@ -14,10 +14,11 @@ enum TabBarIntent: BaseIntent {
 
 
 enum TabBarState: Int, BaseState {
-    case myPage
+    
     case ledger
-    case graph
+    case budget
     case plan
+    case myPage
     
     case idle
 }

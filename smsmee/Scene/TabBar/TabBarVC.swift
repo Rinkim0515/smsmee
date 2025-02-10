@@ -25,10 +25,11 @@ class CustomTabBarController: UIViewController, ViewModelBindable {
     
 
     
-    private let myPageVC = MessageReaderVC(viewModel: MessageReaderVM())
+    
     private let ledgerVC = LedgerVC(viewModel: LedgerVM())
-    private let graphVC = PlanListVC()
-    private let planVC = UIViewController()
+    private let budgetVC = UIViewController()
+    private let planVC = PlanListVC()
+    private let myPageVC = UIViewController()
     
     init(viewModel: TabBarViewModel) {
         self.viewModel = viewModel
@@ -45,7 +46,7 @@ class CustomTabBarController: UIViewController, ViewModelBindable {
         setupChildViewControllers()
         setupCustomTabBar()
         bindViewModel()
-        switchViewController(to: .myPage)
+        switchViewController(to: .ledger)
     }
     
 
@@ -64,7 +65,7 @@ extension CustomTabBarController {
         [
             myPageVC,
             ledgerVC,
-            graphVC,
+            budgetVC,
             planVC
         ].forEach { $0.view.backgroundColor = .white}
         
@@ -79,6 +80,7 @@ extension CustomTabBarController {
     }
     
     private func setupCustomTabBar() {
+
         
         let buttons = tabBarView.getButtons()
         
@@ -104,8 +106,8 @@ extension CustomTabBarController {
             selectedVC = myPageVC
         case .ledger:
             selectedVC = ledgerVC
-        case .graph:
-            selectedVC = graphVC
+        case .budget:
+            selectedVC = budgetVC
         case .plan:
             selectedVC = planVC
         case .idle:

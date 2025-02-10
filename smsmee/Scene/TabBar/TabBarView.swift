@@ -43,7 +43,7 @@ class CustomTabBar: UIView {
             make.bottom.equalToSuperview().offset(-10)
         }
 
-        let tabIcons = ["person.fill", "doc.fill", "chart.bar.fill", "calendar"]
+        let tabIcons = [ "calendar", "pencil.and.scribble", "figure.step.training","person.fill"]
         
         for icon in tabIcons {
             let button = UIButton(type: .system)

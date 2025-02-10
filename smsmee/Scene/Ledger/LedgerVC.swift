@@ -71,8 +71,7 @@ final class LedgerVC: UIViewController, ViewModelBindable {
                  }
             .bind(to: ledgerView.dateButton.rx.title(for: .normal))
             .disposed(by: disposeBag)
-            
-
+        
             
     }
 

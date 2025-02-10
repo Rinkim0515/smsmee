@@ -24,7 +24,7 @@ class LedgerView: UIView {
         button.setTitle("2024년", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .clear
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 23)
         return button
     }()
 //    UIFactory.makeButton(title: "", bgColor: .clear)
@@ -34,13 +34,26 @@ class LedgerView: UIView {
 //        .build()
 
     let previousButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-        button.tintColor = .black
-        button.backgroundColor = .white
+//        let button = UIButton(type: .system)
+//        button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+//        button.tintColor = .black
+//        button.backgroundColor = .white
+//        button.layer.cornerRadius = 5
+//        button.layer.borderWidth = 1
+//        button.layer.borderColor = UIColor.black.cgColor
+        
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "chevron.left")
+        config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 10, weight: .bold) // ✅ 아이콘 크기 설정
+        config.imagePadding = 10 // ✅ 이미지와 버튼 경계 사이 간격
+        config.imagePlacement = .leading // ✅ 이미지 위치 설정
+        
+        let button = UIButton(configuration: config)
+        button.tintColor = .black // ✅ 아이콘 색상
         button.layer.cornerRadius = 5
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.black.cgColor
+        
         return button
         
     }()
