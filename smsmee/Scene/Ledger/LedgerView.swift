@@ -19,19 +19,54 @@ class LedgerView: UIView {
         return chartView
     }()
     
-    var dateButton = UIFactory.makeButton(title: "", bgColor: .clear)
+    var dateButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("2024년", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .clear
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        return button
+    }()
+//    UIFactory.makeButton(title: "", bgColor: .clear)
 //    ButtonFactory.clearButton()
 //        .setFont(.boldSystemFont(ofSize: 22))
 //        .setBorderColor(.clear)
 //        .build()
-////
-//    let previousButton = ButtonFactory.circleButton(30)
-//        .setSymbol("chevron.left", color: .labelBlack)
-//        .build()
+
+    let previousButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        button.tintColor = .black
+        button.backgroundColor = .white
+        button.layer.cornerRadius = 5
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        return button
+        
+    }()
     
-//    let nextButton = ButtonFactory.circleButton(30)
-//        .setSymbol("chevron.right", color: .labelBlack)
-//        .build()
+    let nextButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "chevron.right"), for: .normal)
+        button.tintColor = .black
+        button.backgroundColor = .white
+        button.layer.cornerRadius = 5
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        return button
+    } ()
+    
+    let todayButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("오늘", for: .normal)
+        button.tintColor = .black
+        button.backgroundColor = .white
+        button.layer.cornerRadius = 5
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        return button
+    }()
+
     
     let segmentController = {
         let segmentController = UISegmentedControl(items: ["캘린더", "소비내역 차트"])
@@ -48,10 +83,6 @@ class LedgerView: UIView {
         return segmentController
     }()
     
-//    var moveBudgetButton = ButtonFactory.fillButton()
-//        .setTitle("예산안")
-//        .setFillColor(.primaryBlue)
-//        .build()
     
     
     lazy var floatingButton: UIButton = {
@@ -126,8 +157,9 @@ class LedgerView: UIView {
         
         [
             dateButton,
-//            previousButton,
-//            nextButton,
+            previousButton,
+            todayButton,
+            nextButton,
             calendarView,
             chartView,
             segmentController,
@@ -139,31 +171,33 @@ class LedgerView: UIView {
         ].forEach { self.addSubview($0) }
         
         
-        self.dateButton.snp.makeConstraints {
-            $0.top.equalTo(safeAreaLayoutGuide.snp.top).offset(20)
-            $0.height.equalTo(50)
-            $0.centerX.equalTo(self)
+        self.dateButton.snp.makeConstraints { make in
+            make.top.equalTo(safeAreaLayoutGuide.snp.top)
+            make.height.equalTo(50)
+            make.leading.equalTo(self.snp.leading).offset(20)
         }
-//        self.previousButton.snp.makeConstraints {
-//            $0.trailing.equalTo(self.dateButton.snp.leading).offset(-10)
-//            $0.centerY.equalTo(self.dateButton)
-//            $0.width.height.equalTo(30)
-//            
-//        }
-//        self.nextButton.snp.makeConstraints {
-//            $0.leading.equalTo(self.dateButton.snp.trailing).offset(10)
-//            $0.centerY.equalTo(self.dateButton)
-//            $0.width.height.equalTo(30)
-//            
-//        }
-//
-//        
-//        self.moveBudgetButton.snp.makeConstraints {
-//            $0.trailing.equalTo(self.safeAreaLayoutGuide).inset(20)
-//            $0.centerY.equalTo(self.dateButton)
-//            $0.height.equalTo(40)
-//            $0.width.equalTo(60)
-//        }
+        previousButton.snp.makeConstraints { make in
+            make.trailing.equalTo(todayButton.snp.leading).offset(-10)
+            make.centerY.equalTo(dateButton.snp.centerY)
+            make.width.height.equalTo(15)
+            
+        }
+        
+
+        
+        self.nextButton.snp.makeConstraints {
+            $0.trailing.equalTo(self.snp.trailing).offset(-20)
+            $0.centerY.equalTo(dateButton.snp.centerY)
+            $0.width.height.equalTo(15)
+            
+        }
+        
+        todayButton.snp.makeConstraints { make in
+            make.trailing.equalTo(nextButton.snp.leading).offset(-10)
+            make.centerY.equalTo(dateButton.snp.centerY)
+            make.width.equalTo(50)
+            make.height.equalTo(15)
+        }
         self.segmentController.snp.makeConstraints {
             $0.top.equalTo(dateButton.snp.bottom).offset(25)
             $0.height.equalTo(30)

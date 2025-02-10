@@ -18,9 +18,9 @@ final class CalendarCell: UICollectionViewCell, CellReusable {
     var todayItem: CalendarItem?
     let dayLabel = UIFactory.makeLabel(title: "1", textSize: 18)
     
-    let incomeLabel = UIFactory.makeLabel(title: "", textColor: .systemBlue, textSize: 18)
-    let expenseLabel = UIFactory.makeLabel(title: "", textSize: 18)
-    private let totalAmountLabel = UIFactory.makeLabel(title: "", textSize: 18)
+    let incomeLabel = UIFactory.makeLabel(title: "10000", textColor: .systemBlue, textSize: 18)
+    let expenseLabel = UIFactory.makeLabel(title: "5000", textColor: .pastelRed, textSize: 18)
+    private let totalAmountLabel = UIFactory.makeLabel(title: "5000", textSize: 18)
     
     private lazy var moneyStackView = {
         let stackView = UIStackView(arrangedSubviews:
@@ -38,7 +38,8 @@ final class CalendarCell: UICollectionViewCell, CellReusable {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
-        
+        self.layer.borderColor = UIColor.black.cgColor
+        self.layer.borderWidth = 0.2
         self.backgroundColor = .white
     }
     
@@ -48,12 +49,13 @@ final class CalendarCell: UICollectionViewCell, CellReusable {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.layer.borderColor = UIColor.gray.cgColor
+        self.layer.borderColor = UIColor.black.cgColor
         self.layer.borderWidth = 0.2
         self.backgroundColor = .white
     }
     
     func updateDate(with item: CalendarItem) {
+        
         self.todayItem = item
 //        isThisMonth(today: item)
 //        isToday(currentDay: item.date)

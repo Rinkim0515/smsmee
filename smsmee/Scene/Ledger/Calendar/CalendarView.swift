@@ -50,7 +50,7 @@ class CalendarView: UIView {
         calendarCollectionView.snp.makeConstraints { make in
             make.top.equalTo(self.weekStackView.snp.bottom).offset(2)
             make.width.equalTo(self.snp.width)
-            make.height.equalTo(self.snp.width).multipliedBy(1.5)
+            make.height.equalTo(self.snp.height)
             
         }
     }

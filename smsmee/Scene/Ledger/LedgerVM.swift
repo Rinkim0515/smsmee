@@ -14,11 +14,24 @@ import Foundation
 class LedgerVM: BaseViewModel<LedgerIntent, LedgerState> {
     
     var calendarItems = BehaviorRelay<[CalendarItem]>(value: [] )
-    private var calendarDate = Date()
+    var currentDate = BehaviorRelay<Date>(value: Date())
+    
+    private let dateManager = DateManager.shared
+    
+    
     private var calendar = Calendar.current
+    
     override func transform() {
         
         calendarItems.accept(initCalendar())
+        intentRelay
+            .subscribe(onNext: { [weak self] intent in
+//                switch intent {
+//                case .selectDate(let date):
+//                    self.
+//                }
+            })
+            .disposed(by: self.disposeBag)
     }
     
     
@@ -47,9 +60,7 @@ class LedgerVM: BaseViewModel<LedgerIntent, LedgerState> {
         }
         
         func initCalendar() -> [CalendarItem] {
-            let date = DateFormatter.yearToMonthKR.string(from: self.calendarDate)
-
-            let temp = DateManager.shared.configureDays(currentMonth: calendarDate)
+            let temp = dateManager.configureDays(currentMonth: currentDate.value)
             var calendar = CalendarItem()
             var calendars = [CalendarItem]()
             
@@ -60,6 +71,22 @@ class LedgerVM: BaseViewModel<LedgerIntent, LedgerState> {
 
             return calendars
     }
+    
+    func configureDays (currentMonth: Date) -> [Date] {
+        
+        var totalDays: [Date] = []
+        
+        let firstDayInMonth = dateManager.getFirstDayInMonth(date: currentMonth)
+        let firstWeekday = dateManager.getFirstWeekday(for: currentMonth)
+        let lastMonthOfStart = dateManager.moveToSomeday(when: firstDayInMonth, howLong: -firstWeekday + 1)
+        //42개의 셀을 위함
+        for i in 0 ..< 42 {
+            totalDays.append(dateManager.moveToSomeday(when: lastMonthOfStart, howLong: i))
+            }
+        return totalDays
+    }
+    
+    
     
 }
 

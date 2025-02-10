@@ -50,11 +50,13 @@ final class LedgerVC: UIViewController, ViewModelBindable {
             make.edges.equalToSuperview()
         }
         ledgerView.calendarView.calendarCollectionView.register(CalendarCell.self, forCellWithReuseIdentifier: CalendarCell.reuseId)
+        ledgerView.calendarView.calendarCollectionView.delegate = self
     }
 
     func render(state: LedgerState) {
         
     }
+    
     
     private func updateDate() {
         viewModel.calendarItems
@@ -62,6 +64,15 @@ final class LedgerVC: UIViewController, ViewModelBindable {
                 cell.updateDate(with: item)
             }
             .disposed(by: disposeBag)
+        
+        viewModel.currentDate
+            .map {
+                DateFormatter.yearToMonthKR.string(from: $0)
+                 }
+            .bind(to: ledgerView.dateButton.rx.title(for: .normal))
+            .disposed(by: disposeBag)
+            
+
             
     }
 
@@ -70,7 +81,9 @@ final class LedgerVC: UIViewController, ViewModelBindable {
 
 }
 
-extension LedgerVC/*: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout*/ {
+extension LedgerVC: UICollectionViewDelegateFlowLayout {
+
+    
 
 //    
 //    
@@ -80,17 +93,8 @@ extension LedgerVC/*: UICollectionViewDataSource, UICollectionViewDelegate, UICo
 //        self.navigationController?.pushViewController(viewController, animated: true)
 //    }
 //    
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        42//셀개수 고정 (6주 * 7일)
-//    }
-//    
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CalendarCell.reuseId, for: indexPath) as? CalendarCell else { return UICollectionViewCell() }
-//        
-//        cell.updateDate(item: self.calendarItems[indexPath.item])
-//        
-//        return cell
-//    }
+   
+
     
     
     
@@ -98,7 +102,7 @@ extension LedgerVC/*: UICollectionViewDataSource, UICollectionViewDelegate, UICo
         let totalWidth = collectionView.frame.width
         let numberOfItemsPerRow: CGFloat = 7  // 가로로 7개 배치
         let itemWidth = totalWidth / numberOfItemsPerRow
-        let itemHeight = itemWidth * 1.3
+        let itemHeight = itemWidth * 1.4
         return CGSize(width: itemWidth, height: itemHeight)
     }
     
