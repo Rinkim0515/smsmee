@@ -3,7 +3,7 @@
 //  smsmee
 //
 //  Created by KimRin on 1/26/25.
-//
+// 화면 비율에 따라 동적으로 사이즈를 조절하고 싶다면
 
 import DGCharts
 import SnapKit
@@ -24,34 +24,20 @@ class LedgerView: UIView {
         button.setTitle("2024년", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .clear
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 23)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 25)
         return button
     }()
-//    UIFactory.makeButton(title: "", bgColor: .clear)
-//    ButtonFactory.clearButton()
-//        .setFont(.boldSystemFont(ofSize: 22))
-//        .setBorderColor(.clear)
-//        .build()
 
     let previousButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-//        button.tintColor = .black
-//        button.backgroundColor = .white
-//        button.layer.cornerRadius = 5
-//        button.layer.borderWidth = 1
-//        button.layer.borderColor = UIColor.black.cgColor
-        
         var config = UIButton.Configuration.plain()
         config.image = UIImage(systemName: "chevron.left")
-        config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 10, weight: .bold) // ✅ 아이콘 크기 설정
-        config.imagePadding = 10 // ✅ 이미지와 버튼 경계 사이 간격
-        config.imagePlacement = .leading // ✅ 이미지 위치 설정
-        
+        config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 10, weight: .bold)
+        config.imagePadding = 10
+        config.imagePlacement = .leading
         let button = UIButton(configuration: config)
-        button.tintColor = .black // ✅ 아이콘 색상
+        button.tintColor = .black
         button.layer.cornerRadius = 5
-        button.layer.borderWidth = 1
+        button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.black.cgColor
         
         return button
@@ -59,12 +45,16 @@ class LedgerView: UIView {
     }()
     
     let nextButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "chevron.right"), for: .normal)
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "chevron.right")
+        config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 10, weight: .bold)
+        config.imagePadding = 10
+        config.imagePlacement = .leading
+    
+        let button = UIButton(configuration: config)
         button.tintColor = .black
-        button.backgroundColor = .white
         button.layer.cornerRadius = 5
-        button.layer.borderWidth = 1
+        button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.black.cgColor
         return button
     } ()
@@ -72,10 +62,11 @@ class LedgerView: UIView {
     let todayButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("오늘", for: .normal)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 15)
         button.tintColor = .black
         button.backgroundColor = .white
         button.layer.cornerRadius = 5
-        button.layer.borderWidth = 1
+        button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.black.cgColor
         return button
     }()
@@ -190,9 +181,9 @@ class LedgerView: UIView {
             make.leading.equalTo(self.snp.leading).offset(20)
         }
         previousButton.snp.makeConstraints { make in
-            make.trailing.equalTo(todayButton.snp.leading).offset(-10)
+            make.trailing.equalTo(todayButton.snp.leading).offset(-3)
             make.centerY.equalTo(dateButton.snp.centerY)
-            make.width.height.equalTo(15)
+            make.width.height.equalTo(25)
             
         }
         
@@ -201,15 +192,15 @@ class LedgerView: UIView {
         self.nextButton.snp.makeConstraints {
             $0.trailing.equalTo(self.snp.trailing).offset(-20)
             $0.centerY.equalTo(dateButton.snp.centerY)
-            $0.width.height.equalTo(15)
+            $0.width.height.equalTo(25)
             
         }
         
         todayButton.snp.makeConstraints { make in
-            make.trailing.equalTo(nextButton.snp.leading).offset(-10)
+            make.trailing.equalTo(nextButton.snp.leading).offset(-3)
             make.centerY.equalTo(dateButton.snp.centerY)
             make.width.equalTo(50)
-            make.height.equalTo(15)
+            make.height.equalTo(25)
         }
         self.segmentController.snp.makeConstraints {
             $0.top.equalTo(dateButton.snp.bottom).offset(25)

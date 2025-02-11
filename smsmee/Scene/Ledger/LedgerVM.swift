@@ -24,16 +24,47 @@ class LedgerVM: BaseViewModel<LedgerIntent, LedgerState> {
     private var calendar = Calendar.current
     
     override func transform() {
+        currentDate
+            .subscribe(onNext: { [weak self] date in
+                guard let self = self else { return }
+                let newItems = self.configureCalendarItems(currentMonth: date)
+                self.calendarItems.accept(newItems)
+            })
+            .disposed(by: disposeBag)
         
-        calendarItems.accept(configureCalendarItems(currentMonth: self.currentDate.value))
+        
         intentRelay
             .subscribe(onNext: { [weak self] intent in
-//                switch intent {
-//                case .selectDate(let date):
-//                    self.
-//                }
+                guard let self = self else { return }
+                switch intent {
+                case .movePreviousMonth:
+                    let today = Date()
+                    self.currentDate.accept(today)
+                    self.updateState(.updateDate(today))
+                case .moveNextMonth:
+                    let newDate = calendar.date(byAdding: .month, value: 1, to: self.currentDate.value) ?? self.currentDate.value
+                    self.currentDate.accept(newDate)
+                    self.updateState(.updateDate(newDate))
+                case .moveToday:
+                    let today = Date()
+                    self.currentDate.accept(today)
+                    self.updateState(.updateDate(today))
+                case .moveToDate(let date):
+                    let today = Date()
+                    self.currentDate.accept(today)
+                    self.updateState(.updateDate(today))
+                case .tapCell(let date):
+                    let today = Date()
+                    self.currentDate.accept(today)
+                    self.updateState(.updateDate(today))
+                case .createTransaction:
+                    let today = Date()
+                    self.currentDate.accept(today)
+                    self.updateState(.updateDate(today))
+                }
+
             })
-            .disposed(by: self.disposeBag)
+            .disposed(by: disposeBag)
     }
 
     

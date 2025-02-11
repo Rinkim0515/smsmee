@@ -72,6 +72,10 @@ final class LedgerVC: UIViewController, ViewModelBindable {
             .bind(to: ledgerView.dateButton.rx.title(for: .normal))
             .disposed(by: disposeBag)
         
+        ledgerView.nextButton.rx.tap
+            .map { LedgerIntent.moveNextMonth}
+            .bind(to: viewModel.intentRelay)
+            .disposed(by: disposeBag)
             
     }
 

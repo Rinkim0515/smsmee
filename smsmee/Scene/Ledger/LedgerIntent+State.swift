@@ -6,18 +6,22 @@
 //
 
 import Foundation
+import UIKit
 
 enum LedgerIntent: BaseIntent {
-    case tapDate
-    case tapCell(Date)
-    case tapBudget
+    case movePreviousMonth
+    case moveNextMonth
+    case moveToday
+    case moveToDate(Date)
     
+    case tapCell(Date)
+    case createTransaction
 }
 
 enum LedgerState: BaseState {
     case idle
-    
-    
-    
+    case updateDate(Date)
+    case naviagateToDetail(Date)
+    case navigateToTransaction
     
 }
