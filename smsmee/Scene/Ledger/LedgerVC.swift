@@ -41,6 +41,7 @@ final class LedgerVC: UIViewController, ViewModelBindable {
         self.view.backgroundColor = .white
         setupUI()
         updateDate()
+        
     }
     
     
@@ -54,14 +55,31 @@ final class LedgerVC: UIViewController, ViewModelBindable {
     }
 
     func render(state: LedgerState) {
-        
+        switch state {
+        case .naviagateToDetail(let date):
+            let viewController = DailyTransactionVC(transactionView: DailyTransactionView())
+            viewController.today = date
+                self.navigationController?.pushViewController(viewController, animated: true)
+            
+        default:
+            return
+         
+        }
     }
-    
+
+
     
     private func updateDate() {
+        viewModel.stateRelay
+            .bind(onNext: { [weak self] state in
+                self?.render(state: state)
+            })
+            .disposed(by: disposeBag)
+        
         viewModel.calendarItems
             .bind(to: ledgerView.calendarView.calendarCollectionView.rx.items(cellIdentifier: CalendarCell.reuseId, cellType: CalendarCell.self)) { index, item, cell in
                 cell.updateDate(with: item)
+                
             }
             .disposed(by: disposeBag)
         
@@ -72,10 +90,28 @@ final class LedgerVC: UIViewController, ViewModelBindable {
             .bind(to: ledgerView.dateButton.rx.title(for: .normal))
             .disposed(by: disposeBag)
         
+        ledgerView.calendarView.calendarCollectionView.rx.modelSelected(CalendarItem.self)
+            .subscribe(onNext: { [weak self] item in
+
+                self?.viewModel.intentRelay.accept(.tapCell(item))
+            })
+            .disposed(by: disposeBag)
+        
         ledgerView.nextButton.rx.tap
             .map { LedgerIntent.moveNextMonth}
             .bind(to: viewModel.intentRelay)
             .disposed(by: disposeBag)
+        
+        ledgerView.previousButton.rx.tap
+            .map { LedgerIntent.movePreviousMonth}
+            .bind(to: viewModel.intentRelay)
+            .disposed(by: disposeBag)
+            
+        ledgerView.todayButton.rx.tap
+            .map { LedgerIntent.moveToday}
+            .bind(to: viewModel.intentRelay)
+            .disposed(by: disposeBag)
+        
             
     }
 

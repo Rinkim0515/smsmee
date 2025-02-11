@@ -10,15 +10,15 @@
 				<key>location-parameters</key>
 				<dict>
 					<key>EndingColumnNumber</key>
-					<string>8</string>
+					<string>0</string>
 					<key>EndingLineNumber</key>
-					<string>17</string>
+					<string>19</string>
 					<key>StartingColumnNumber</key>
 					<string>0</string>
 					<key>StartingLineNumber</key>
-					<string>17</string>
+					<string>18</string>
 					<key>Timestamp</key>
-					<string>759550851.837522</string>
+					<string>760951013.963398</string>
 				</dict>
 				<key>rebasable-url</key>
 				<dict>
@@ -34,15 +34,16 @@
 			<key>text-context</key>
 			<dict>
 				<key>focused</key>
-				<string>        </string>
+				<string>        window.rootViewController = navigationController
+</string>
 				<key>leading</key>
-				<string>        guard let windowScene = (scene as? UIWindowScene) else { return }
-        let window = UIWindow(windowScene: windowScene)
+				<string>        let window = UIWindow(windowScene: windowScene)
+        let navigationController = UINavigationController(rootViewController: CustomTabBarController(viewModel: TabBarViewModel()))
 </string>
 				<key>trailing</key>
-				<string>window.rootViewController = CustomTabBarController(viewModel: TabBarViewModel())
-        window.makeKeyAndVisible()
+				<string>        window.makeKeyAndVisible()
         
+        self.window = window
 </string>
 			</dict>
 			<key>type</key>

@@ -17,8 +17,8 @@ class LedgerVM: BaseViewModel<LedgerIntent, LedgerState> {
     private let realmManger = RealmManager.shared
     
     var calendarItems = BehaviorRelay<[CalendarItem]>(value: [] )
-    var currentDate = BehaviorRelay<Date>(value: Date())
-    var dailyTransaction: [DailyTotalTransaction] = []
+    var currentDate = BehaviorRelay<Date>(value: Date().removeDayTime())
+    
     
     
     private var calendar = Calendar.current
@@ -38,25 +38,28 @@ class LedgerVM: BaseViewModel<LedgerIntent, LedgerState> {
                 guard let self = self else { return }
                 switch intent {
                 case .movePreviousMonth:
-                    let today = Date()
-                    self.currentDate.accept(today)
-                    self.updateState(.updateDate(today))
-                case .moveNextMonth:
-                    let newDate = calendar.date(byAdding: .month, value: 1, to: self.currentDate.value) ?? self.currentDate.value
+                    let newDate = moveToPrevOrNextMonth(plusOrMinnus: -1)
                     self.currentDate.accept(newDate)
                     self.updateState(.updateDate(newDate))
+                    
+                case .moveNextMonth:
+                    let newDate = moveToPrevOrNextMonth(plusOrMinnus: 1)
+                    self.currentDate.accept(newDate)
+                    self.updateState(.updateDate(newDate))
+                    
                 case .moveToday:
                     let today = Date()
                     self.currentDate.accept(today)
                     self.updateState(.updateDate(today))
+                    
                 case .moveToDate(let date):
                     let today = Date()
                     self.currentDate.accept(today)
                     self.updateState(.updateDate(today))
-                case .tapCell(let date):
-                    let today = Date()
-                    self.currentDate.accept(today)
-                    self.updateState(.updateDate(today))
+                    
+                case .tapCell(let item):
+                    self.updateState(.naviagateToDetail(item.date))
+
                 case .createTransaction:
                     let today = Date()
                     self.currentDate.accept(today)
@@ -67,17 +70,14 @@ class LedgerVM: BaseViewModel<LedgerIntent, LedgerState> {
             .disposed(by: disposeBag)
     }
 
-    
+    //CalendarCell에게 주어야하는 구조채 만드는 로직
     func configureCalendarItems(currentMonth: Date) -> [CalendarItem] {
-
         var calendarItems: [CalendarItem] = []
-        
-        
-        
         let firstDayInMonth = dateManager.getFirstDayInMonth(date: currentMonth)
         let firstWeekday = dateManager.getFirstWeekday(for: currentMonth)
         let lastMonthOfStart = dateManager.moveToSomeday(when: firstDayInMonth, howLong: -firstWeekday + 1)
         let thisMonth: Int = calendar.component(.month, from: currentDate.value)
+        
         
         for i in 0 ..< 42 {
             let date = dateManager.moveToSomeday(when: lastMonthOfStart, howLong: i)
@@ -145,24 +145,18 @@ class LedgerVM: BaseViewModel<LedgerIntent, LedgerState> {
         return (totalIncome, totalExpense)
     }
     
+    //전달 혹은 다음달로
+    func moveToPrevOrNextMonth(plusOrMinnus: Int) -> Date {
+        var date: Date
+        guard plusOrMinnus == -1 || plusOrMinnus == 1  else { return Date() }
+        date = calendar.date(byAdding: .month, value: plusOrMinnus, to: self.currentDate.value) ?? self.currentDate.value
+        return date
+
+    }
 
     
 }
 
 
-extension LedgerVM {
-    // 여기에서 Cell이 주말인지 아닌지 , 각 수입과,지출,합산금액은 얼마인지 계산을 한후 뿌려줘야함
-    func getCellData(date: Date){
-        
-        
-    }
-}
 
-struct DailyTotalTransaction {
-    
-    let totalIncome: Int
-    let totalExpense: Int
-    var total: Int {
-        totalIncome - totalExpense
-    }
-}
+

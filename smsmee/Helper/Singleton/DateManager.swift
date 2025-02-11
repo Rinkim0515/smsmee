@@ -17,16 +17,7 @@ final class DateManager {
         self.dateComponents.timeZone = TimeZone(secondsFromGMT: 0)
     }
     
-    func configureDays (currentMonth: Date) -> [Date] {
-        var totalDays: [Date] = []
-        let firstDayInMonth = getFirstDayInMonth(date: currentMonth)
-        let firstWeekday = getFirstWeekday(for: currentMonth)
-        let lastMonthOfStart = moveToSomeday(when: firstDayInMonth, howLong: -firstWeekday + 1)
-        for i in 0 ..< 42 {
-                totalDays.append(moveToSomeday(when: lastMonthOfStart, howLong: i))
-            }
-        return totalDays
-    }
+
     
     //시간을 00시00분00초
     func make000000(){
@@ -45,7 +36,6 @@ final class DateManager {
     func calculateStartAndEndOfDay(for date: Date) -> (startOfDay: Date, endOfDay: Date) {
         let calendar = Calendar.current
         
-
         // 날짜의 시작 (00:00:00)
         let startOfDay = calendar.startOfDay(for: date)
 
@@ -202,5 +192,16 @@ final class DateManager {
         }
         
         
+    }
+    
+
+
+}
+
+extension Date {
+    func removeDayTime() -> Date {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: self)
+        return calendar.date(from: components) ?? self
     }
 }

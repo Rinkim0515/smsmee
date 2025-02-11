@@ -14,7 +14,7 @@ enum LedgerIntent: BaseIntent {
     case moveToday
     case moveToDate(Date)
     
-    case tapCell(Date)
+    case tapCell(CalendarItem)
     case createTransaction
 }
 
