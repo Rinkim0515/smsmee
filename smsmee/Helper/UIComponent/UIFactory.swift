@@ -8,7 +8,8 @@
 import UIKit
 
 class UIFactory {
-    static func makeButton(title: String, bgColor: UIColor) -> UIButton {
+    //MARK: - UIButton
+    static func button(title: String, bgColor: UIColor) -> UIButton {
         let button = UIButton()
         button.setTitle(title, for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -18,24 +19,54 @@ class UIFactory {
         button.clipsToBounds = true
         return button
     }
-    
-    // 버튼 타이틀은 볼드 처리로하고 일반텍스트는 그냥쓰자
-    static func makeLabel(title: String,
-                          textColor: UIColor = .black,
-                          textSize: CGFloat,
-                          align: NSTextAlignment = .left,
-                          isBold: Bool = false) -> UILabel {
-        
+    //MARK: - UILabel
+    static func label(title: String,textSize: CGFloat,textColor: UIColor = .black,align: NSTextAlignment = .left,isBold: Bool = false) -> UILabel {
         let label = UILabel()
         label.textAlignment = align
         label.text = title
         label.textColor = textColor
-        
         label.font = isBold ?
         UIFont.boldSystemFont(ofSize: textSize) : UIFont.systemFont(ofSize: textSize)
-        
         label.numberOfLines = 0
         return label
+    }
+    //MARK: - UITextField
+    static func textField(keyboard: UIKeyboardType, rightViewString: String = "") -> CustomTextField {
+        let textField = CustomTextField()
+        textField.textColor = UIColor.black
+        textField.borderStyle = .none
+        textField.keyboardType = keyboard
+        textField.clipsToBounds = false
+        
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(title: "입력완료", style: .done, target: textField, action: #selector(textField.dismissKeyboard))
+        toolbar.setItems([doneButton], animated: true)
+        textField.inputAccessoryView = toolbar
+        
+        guard rightViewString == "" else {
+            let currencyLabel = UILabel()
+            currencyLabel.text = rightViewString
+            currencyLabel.font = textField.font
+            currencyLabel.textColor = .black
+            currencyLabel.sizeToFit()
+            
+            textField.rightView = currencyLabel
+            textField.rightViewMode = .always
+            return textField }
+        
+        
+        return textField
+    }
+    //MARK: - UIDatePicker
+    static func datePicker() -> UIDatePicker {
+        let picker = UIDatePicker()
+        picker.datePickerMode = .date
+        picker.preferredDatePickerStyle = .wheels
+        picker.locale = Locale(identifier: "ko_KR")
+        picker.timeZone = TimeZone(identifier: "Asia/Seoul")
+        return picker
     }
     
     

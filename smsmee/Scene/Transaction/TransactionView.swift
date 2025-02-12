@@ -10,20 +10,17 @@ import UIKit
 
 class MoneyDiaryEditView: UIView {
     //MARK: - UIComponent
-    private let dateLabel = UIFactory.makeLabel(title: "수입일", textSize: 14)
-    private let priceLabel = UIFactory.makeLabel(title: "수입금액", textSize: 14)
-    private let titleLabel = UIFactory.makeLabel(title: "수입명", textSize: 14)
-    private let categoryLabel = UIFactory.makeLabel(title: "카테고리", textSize: 14)
-    private let noteLabel = UIFactory.makeLabel(title: "메모", textSize: 14)
+    private let dateLabel = UIFactory.label(title: "수입일", textSize: 14)
+    private let priceLabel = UIFactory.label(title: "수입금액", textSize: 14)
+    private let titleLabel = UIFactory.label(title: "수입명", textSize: 14)
+    private let categoryLabel = UIFactory.label(title: "카테고리", textSize: 14)
+    private let noteLabel = UIFactory.label(title: "메모", textSize: 14)
+    let priceTextField = UIFactory.textField(keyboard: .numberPad)
+    let titleTextField = UIFactory.textField(keyboard: .default)
+    lazy var categoryTextField = UIFactory.textField(keyboard: .default)
+    let cancelButton = UIFactory.button(title: "취소", bgColor: .lightGray)
+    let saveButton = UIFactory.button(title: "저장", bgColor: .systemBlue)
     
-    let priceTextField = AmountTextField.createTextField(keyboard: .numberPad, currencyText: "원")
-    let titleTextField = AmountTextField.createTextField(keyboard: .default, currencyText: "")
-    lazy var categoryTextField = AmountTextField.createTextField(keyboard: .default, currencyText: "")
-
-    
-    
-    let cancelButton = UIFactory.makeButton(title: "취소", bgColor: .lightGray)
-    let saveButton = UIFactory.makeButton(title: "저장", bgColor: .systemBlue)
     lazy var segmentControl: UISegmentedControl = {
         let segmentControl = UISegmentedControl(items: ["지출", "수입"])
         segmentControl.selectedSegmentIndex = 0
@@ -42,10 +39,7 @@ class MoneyDiaryEditView: UIView {
         return textView
     }()
     
-    let datePicker: UIDatePicker = {
-        let datePicker = UIDatePicker()
-        return datePicker
-    }()
+    let datePicker: UIDatePicker = UIFactory.datePicker()
     
     let deleteButton: UIBarButtonItem = {
         let barButton = UIBarButtonItem()
