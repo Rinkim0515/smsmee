@@ -53,9 +53,9 @@ class LedgerVM: BaseViewModel<LedgerIntent, LedgerState> {
                     self.updateState(.updateDate(today))
                     
                 case .moveToDate(let date):
-                    let today = Date()
-                    self.currentDate.accept(today)
-                    self.updateState(.updateDate(today))
+                    let newDate = date
+                    self.currentDate.accept(newDate)
+                    self.updateState(.updateDate(newDate))
                     
                 case .tapCell(let item):
                     self.updateState(.naviagateToDetail(item.date))

@@ -18,7 +18,7 @@ class LedgerView: UIView {
         chartView.highlightPerTapEnabled = false
         return chartView
     }()
-    
+    //MARK: - UIButton
     var dateButton: UIButton = {
         let button = UIButton()
         button.setTitle("2024년", for: .normal)
@@ -27,7 +27,6 @@ class LedgerView: UIView {
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 25)
         return button
     }()
-
     let previousButton: UIButton = {
         var config = UIButton.Configuration.plain()
         config.image = UIImage(systemName: "chevron.left")
@@ -39,11 +38,9 @@ class LedgerView: UIView {
         button.layer.cornerRadius = 5
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.black.cgColor
-        
         return button
         
     }()
-    
     let nextButton: UIButton = {
         var config = UIButton.Configuration.plain()
         config.image = UIImage(systemName: "chevron.right")
@@ -58,7 +55,6 @@ class LedgerView: UIView {
         button.layer.borderColor = UIColor.black.cgColor
         return button
     } ()
-    
     let todayButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("오늘", for: .normal)

@@ -57,10 +57,13 @@ final class LedgerVC: UIViewController, ViewModelBindable {
     func render(state: LedgerState) {
         switch state {
         case .naviagateToDetail(let date):
-            let viewController = DailyTransactionVC(transactionView: DailyTransactionView())
+            let viewController = TransactionListVC(transactionView: TransactionListView())
             viewController.today = date
                 self.navigationController?.pushViewController(viewController, animated: true)
-            
+        case .navigateToTransaction:
+            let viewController = UIViewController()
+            self.navigationController?.pushViewController(viewController, animated: true)
+        
         default:
             return
          

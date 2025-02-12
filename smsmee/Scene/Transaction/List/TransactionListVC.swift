@@ -8,9 +8,9 @@
 import UIKit
 import SnapKit
 
-final class DailyTransactionVC: UIViewController {
+final class TransactionListVC: UIViewController {
 
-    let transactionView: DailyTransactionView
+    let transactionView: TransactionListView
     var transactionList: [Transaction] = []
     var today = Date()
     let dateManager = DateManager.shared
@@ -18,7 +18,7 @@ final class DailyTransactionVC: UIViewController {
     var dailyIncome = 0
     var dailyExpense = 0
     
-    init(transactionView: DailyTransactionView) {
+    init(transactionView: TransactionListView) {
         
         self.transactionView = transactionView
         super.init(nibName: nil, bundle: nil)
@@ -45,7 +45,7 @@ final class DailyTransactionVC: UIViewController {
         
         transactionView.listCollectionView.dataSource = self
         transactionView.listCollectionView.delegate = self
-        transactionView.listCollectionView.register(DailyTransactionCell.self, forCellWithReuseIdentifier: DailyTransactionCell.reuseId)
+        transactionView.listCollectionView.register(TransactionListCell.self, forCellWithReuseIdentifier: TransactionListCell.reuseId)
         self.view.addSubview(transactionView)
         
         transactionView.snp.makeConstraints {
@@ -88,7 +88,7 @@ final class DailyTransactionVC: UIViewController {
     
 }
 
-extension DailyTransactionVC: UICollectionViewDataSource {
+extension TransactionListVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //        let viewController = MoneyDiaryEditVC(item: transactionList[indexPath.row])
 //        self.navigationController?.pushViewController(viewController, animated: false)
@@ -101,8 +101,8 @@ extension DailyTransactionVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: DailyTransactionCell.reuseId,
-            for: indexPath) as? DailyTransactionCell
+            withReuseIdentifier: TransactionListCell.reuseId,
+            for: indexPath) as? TransactionListCell
                 
         else { return UICollectionViewCell() }
         
@@ -114,7 +114,7 @@ extension DailyTransactionVC: UICollectionViewDataSource {
     }
 }
 
-extension DailyTransactionVC: UICollectionViewDelegateFlowLayout {
+extension TransactionListVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {

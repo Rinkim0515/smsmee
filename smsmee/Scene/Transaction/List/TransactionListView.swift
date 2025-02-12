@@ -8,11 +8,9 @@
 import UIKit
 import SnapKit
 
-final class DailyTransactionView: UIView {
+final class TransactionListView: UIView {
 
     let dailyIncome: UILabel = UIFactory.makeLabel(title: "income",textColor: .blue ,textSize: 18)
-    
-
     let dailyExpense: UILabel = UIFactory.makeLabel(title: "income",textColor: .red ,textSize: 18)
     lazy var listCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -21,49 +19,40 @@ final class DailyTransactionView: UIView {
         collectionView.backgroundColor = .white
         return collectionView
     }()
-
+        
     override init(frame: CGRect) {
-        super.init(frame: frame)
+        super.init(frame: .zero)
         self.backgroundColor = .white
-        self.configureUI()
-        self.setupLayout()
+        setupUI()
     }
-
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func configureUI() {
+    
+    //MARK: - UI Render
+    private func setupUI() {
         [
          self.dailyIncome,
          self.dailyExpense,
          self.listCollectionView
         ].forEach { self.addSubview($0) }
         
-    }
-    
-    
-    private func setupLayout() {
-        
-        self.dailyIncome.snp.makeConstraints {
-            $0.top.equalTo(self.snp.top).offset(20)
-            $0.trailing.equalTo(dailyExpense.snp.leading).offset(-20)
-            $0.height.equalTo(50)
+        self.dailyIncome.snp.makeConstraints { make in
+            make.top.equalTo(self.snp.top).offset(20)
+            make.trailing.equalTo(dailyExpense.snp.leading).offset(-20)
+            make.height.equalTo(50)
         }
-
-        self.dailyExpense.snp.makeConstraints {
-            $0.centerY.equalTo(dailyIncome.snp.centerY)
-            $0.trailing.equalTo(self.snp.trailing).offset(-20)
+        self.dailyExpense.snp.makeConstraints { make in
+            make.centerY.equalTo(dailyIncome.snp.centerY)
+            make.trailing.equalTo(self.snp.trailing).offset(-20)
         }
-
-        self.listCollectionView.snp.makeConstraints {
-            $0.top.equalTo(dailyIncome.snp.bottom).offset(20)
-            $0.leading.trailing.equalTo(self).inset(20)
-            $0.bottom.equalTo(self.safeAreaLayoutGuide.snp.bottom)
+        self.listCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(dailyIncome.snp.bottom).offset(20)
+            make.leading.trailing.equalTo(self).inset(20)
+            make.bottom.equalTo(self.safeAreaLayoutGuide.snp.bottom)
         }
     }
-
-
 }
 
 

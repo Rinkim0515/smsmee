@@ -1,13 +1,14 @@
 //
-//  TransactionCell.swift
+//  DailyTransactionCell.swift
 //  smsmee
 //
 //  Created by KimRin on 2/11/25.
 //
 
+
 import UIKit
 
-final class DailyTransactionCell: UICollectionViewCell, CellReusable {
+final class TransactionListCell: UICollectionViewCell, CellReusable {
     private let categoryImage = UIImageView()
     private let nameLabel: UILabel = UIFactory.makeLabel(title: "내용",textColor: .black ,textSize: 18, align: .left)
     private let amountLabel: UILabel = UIFactory.makeLabel(title: "금액",textColor: .lightGray ,textSize: 15, align: .left)
