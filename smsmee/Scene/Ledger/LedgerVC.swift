@@ -26,7 +26,7 @@ final class LedgerVC: UIViewController, ViewModelBindable {
     private var calendarDate = Date()
     private var calendarItems = [CalendarItem]()
     
-    
+    //MARK: - LifeCycle
     init(viewModel: LedgerVM) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -43,8 +43,14 @@ final class LedgerVC: UIViewController, ViewModelBindable {
         updateDate()
         
     }
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.isNavigationBarHidden = true
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        self.navigationController?.isNavigationBarHidden = false
+    }
     
-    
+    //MARK: - Render
     func setupUI() {
         view.addSubview(ledgerView)
         ledgerView.snp.makeConstraints { make in
@@ -54,6 +60,7 @@ final class LedgerVC: UIViewController, ViewModelBindable {
         ledgerView.calendarView.calendarCollectionView.delegate = self
     }
 
+    
     func render(state: LedgerState) {
         switch state {
         case .naviagateToDetail(let date):
@@ -63,7 +70,6 @@ final class LedgerVC: UIViewController, ViewModelBindable {
         case .navigateToTransaction:
             let viewController = UIViewController()
             self.navigationController?.pushViewController(viewController, animated: true)
-        
         default:
             return
          
@@ -82,7 +88,6 @@ final class LedgerVC: UIViewController, ViewModelBindable {
         viewModel.calendarItems
             .bind(to: ledgerView.calendarView.calendarCollectionView.rx.items(cellIdentifier: CalendarCell.reuseId, cellType: CalendarCell.self)) { index, item, cell in
                 cell.updateDate(with: item)
-                
             }
             .disposed(by: disposeBag)
         
@@ -95,7 +100,6 @@ final class LedgerVC: UIViewController, ViewModelBindable {
         
         ledgerView.calendarView.calendarCollectionView.rx.modelSelected(CalendarItem.self)
             .subscribe(onNext: { [weak self] item in
-
                 self?.viewModel.intentRelay.accept(.tapCell(item))
             })
             .disposed(by: disposeBag)

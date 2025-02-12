@@ -10,10 +10,12 @@ enum PlanListIntent: BaseIntent {
     case tapCreate
     case tapCell
 }
+
 enum PlanListState: BaseState {
-    
+    case idle
 }
 
-final class PlanListVM: BaseViewModel<<#Intent: BaseIntent#>, <#State: BaseState#>> {
+
+final class PlanListVM: BaseViewModel<PlanListIntent, PlanListState> {
     
 }
