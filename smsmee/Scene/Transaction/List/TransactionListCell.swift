@@ -10,9 +10,9 @@ import UIKit
 
 final class TransactionListCell: UICollectionViewCell, CellReusable {
     private let categoryImage = UIImageView()
-    private let nameLabel: UILabel = UIFactory.makeLabel(title: "내용",textColor: .black ,textSize: 18, align: .left)
-    private let amountLabel: UILabel = UIFactory.makeLabel(title: "금액",textColor: .lightGray ,textSize: 15, align: .left)
-    private let timeLabel: UILabel = UIFactory.makeLabel(title: "시간",textColor: .lightGray ,textSize: 13, align: .right)
+    private let nameLabel: UILabel = UIFactory.label(title: "내용",textSize: 18, textColor: .black, align: .left)
+    private let amountLabel: UILabel = UIFactory.label(title: "금액",textSize: 15, textColor: .lightGray, align: .left)
+    private let timeLabel: UILabel = UIFactory.label(title: "시간",textSize: 13, textColor: .lightGray , align: .right)
     
 
     

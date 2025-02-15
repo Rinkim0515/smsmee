@@ -16,11 +16,11 @@ import SnapKit
 final class CalendarCell: UICollectionViewCell, CellReusable {
     private let dateManager = DateManager.shared
     var todayItem: CalendarItem?
-    let dayLabel = UIFactory.makeLabel(title: "1", textSize: 18)
+    let dayLabel = UIFactory.label(title: "1", textSize: 18)
     
-    let incomeLabel = UIFactory.makeLabel(title: "10000", textColor: .systemBlue, textSize: 18)
-    let expenseLabel = UIFactory.makeLabel(title: "5000", textColor: .pastelRed, textSize: 18)
-    private let totalAmountLabel = UIFactory.makeLabel(title: "5000", textSize: 18)
+    let incomeLabel = UIFactory.label(title: "10000", textSize: 18, textColor: .systemBlue)
+    let expenseLabel = UIFactory.label(title: "5000", textSize: 18, textColor: .pastelRed)
+    private let totalAmountLabel = UIFactory.label(title: "5000", textSize: 18)
     
     private lazy var moneyStackView = {
         let stackView = UIStackView(arrangedSubviews:

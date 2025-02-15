@@ -7,20 +7,28 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
-final class TransactionListVC: UIViewController {
-
-    let transactionView: TransactionListView
+final class TransactionListVC: UIViewController, ViewModelBindable {
+    
+    typealias Intent = TransactionListIntent
+    typealias State = TransactionListState
+    typealias VM = TransactionListVM
+    
+    var disposeBag = DisposeBag()
+    let listView = TransactionListView()
     var transactionList: [Transaction] = []
+    var viewModel: TransactionListVM
+    
     var today = Date()
     let dateManager = DateManager.shared
-    
     var dailyIncome = 0
     var dailyExpense = 0
     
-    init(transactionView: TransactionListView) {
-        
-        self.transactionView = transactionView
+    //MARK: - LifeCycle
+    init(viewModel: TransactionListVM) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -32,32 +40,64 @@ final class TransactionListVC: UIViewController {
         
         super.viewDidLoad()
         self.setupUI()
-        view.backgroundColor = .white
+        
+        updateData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
-        transactionView.listCollectionView.reloadData()
+        listView.listCollectionView.reloadData()
         reloadTotalAmount()
     }
     
+    
+    
+    func render(state: TransactionListState) {
+        
+    }
+    
+    func updateData() {
+        viewModel.expenseAmount
+            .map{ String($0) }
+            .bind(to: listView.dailyExpense.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.incomeAmount
+            .map { String($0) }
+            .bind(to: listView.dailyIncome.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.currrentDate
+            .map { DateFormatter.yearToDayKR.string(from: $0) }
+            .bind(to: self.navigationItem.rx.title)
+            .disposed(by: disposeBag)
+    }
+    
     private func setupUI() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
         
-        transactionView.listCollectionView.dataSource = self
-        transactionView.listCollectionView.delegate = self
-        transactionView.listCollectionView.register(TransactionListCell.self, forCellWithReuseIdentifier: TransactionListCell.reuseId)
-        self.view.addSubview(transactionView)
+        appearance.backgroundColor = .white
+        appearance.titleTextAttributes = [
+            .foregroundColor: UIColor.black,  // 원하는 색상으로 변경
+            .font: UIFont.boldSystemFont(ofSize: 18) // 폰트 설정 (선택 사항)
+        ]
+
         
-        transactionView.snp.makeConstraints {
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        
+        
+        listView.listCollectionView.dataSource = self
+        listView.listCollectionView.delegate = self
+        listView.listCollectionView.register(TransactionListCell.self, forCellWithReuseIdentifier: TransactionListCell.reuseId)
+        self.view.addSubview(listView)
+        
+        listView.snp.makeConstraints {
             $0.edges.equalTo(self.view.safeAreaLayoutGuide)
         }
     }
 
-    func setDate(day: Date){
-        today = day
-        let dateString = DateFormatter.yearToDay.string(from: day)
-        self.navigationItem.title = dateString
-    }
     
     private func reloadTotalAmount() {
         
@@ -76,12 +116,10 @@ final class TransactionListVC: UIViewController {
         let imcomeString = "\(incomeAmount)"
         let expenseString = "\(expesneAmount)"
             
-        
-//            let imcomeString = KoreanCurrencyFormatter.shared.string(from: incomeAmount)
-//            let expenseString = KoreanCurrencyFormatter.shared.string(from: expesneAmount)
+    
 
-            self.transactionView.dailyIncome.text = "수입: \(imcomeString) 원"
-            self.transactionView.dailyExpense.text = "지출: \(expenseString) 원"
+            self.listView.dailyIncome.text = "수입: \(imcomeString) 원"
+            self.listView.dailyExpense.text = "지출: \(expenseString) 원"
             
         
     }

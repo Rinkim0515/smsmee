@@ -10,8 +10,8 @@ import SnapKit
 
 final class TransactionListView: UIView {
 
-    let dailyIncome: UILabel = UIFactory.makeLabel(title: "income",textColor: .blue ,textSize: 18)
-    let dailyExpense: UILabel = UIFactory.makeLabel(title: "income",textColor: .red ,textSize: 18)
+    let dailyIncome: UILabel = UIFactory.label(title: "income", textSize: 18, textColor: .blue)
+    let dailyExpense: UILabel = UIFactory.label(title: "expense", textSize: 18, textColor: .red)
     lazy var listCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical

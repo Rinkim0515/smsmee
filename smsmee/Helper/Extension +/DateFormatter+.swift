@@ -59,3 +59,13 @@ extension DateFormatter {
     }()
     
 }
+
+extension NumberFormatter {
+    static let koreaCurrency: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.locale = Locale(identifier: "ko_KR")
+        return formatter
+    }()
+    
+}

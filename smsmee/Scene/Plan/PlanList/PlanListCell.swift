@@ -10,9 +10,9 @@ import UIKit
 import SnapKit
 
 class PlanListCell: UICollectionViewCell, CellReusable {
-    private let titleLabel: UILabel = UIFactory.makeLabel(title: "타이틀", textSize: 16, isBold: true)
-    private let dDayLabel: UILabel = UIFactory.makeLabel(title: "디데이", textSize: 14, align: .center)
-    private let amountLabel: UILabel = UIFactory.makeLabel(title: "1000000원", textSize: 14,align: .right)
+    private let titleLabel: UILabel = UIFactory.label(title: "타이틀", textSize: 16, isBold: true)
+    private let dDayLabel: UILabel = UIFactory.label(title: "디데이", textSize: 14, align: .center)
+    private let amountLabel: UILabel = UIFactory.label(title: "1000000원", textSize: 14,align: .right)
     
     override init(frame: CGRect) {
         super.init(frame: frame)

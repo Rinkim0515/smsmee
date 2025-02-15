@@ -11,9 +11,9 @@ import SnapKit
 
 class MessageReaderView: UIView {
     
-    private let titleLabel: UILabel = UIFactory.makeLabel(title: "지출내역 자동입력 기능", textColor: .black, textSize: 24, isBold: true)
+    private let titleLabel: UILabel = UIFactory.label(title: "지출내역 자동입력 기능", textSize: 24, textColor: .black, isBold: true)
     let submitButton: UIButton = UIFactory.button(title: "변환하여 저장하기", bgColor: .systemBlue)
-    let howToUselabel = UIFactory.makeLabel(title: "문자를 복사한후 하단에 붙혀넣기 해주세요", textColor: .black, textSize: 15)
+    let howToUselabel = UIFactory.label(title:  "문자를 복사한후 하단에 붙혀넣기 해주세요", textSize: 15, textColor: .black)
     
      let inputTextView: UITextView = {
         let textView = UITextView()

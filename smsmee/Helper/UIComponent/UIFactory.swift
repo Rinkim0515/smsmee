@@ -20,7 +20,7 @@ class UIFactory {
         return button
     }
     //MARK: - UILabel
-    static func label(title: String,textSize: CGFloat,textColor: UIColor = .black,align: NSTextAlignment = .left,isBold: Bool = false) -> UILabel {
+    static func label(title: String,textSize: CGFloat, textColor: UIColor = .black, align: NSTextAlignment = .left, isBold: Bool = false) -> UILabel {
         let label = UILabel()
         label.textAlignment = align
         label.text = title
@@ -68,6 +68,6 @@ class UIFactory {
         picker.timeZone = TimeZone(identifier: "Asia/Seoul")
         return picker
     }
-    
+
     
 }

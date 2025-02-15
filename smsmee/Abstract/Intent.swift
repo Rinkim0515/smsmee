@@ -15,13 +15,7 @@ protocol BaseState {
 
 
 
-enum BudgetIntent {
-    
-}
 
-enum TransactionIntent {
-    
-}
 
 
 

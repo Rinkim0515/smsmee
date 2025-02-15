@@ -21,8 +21,6 @@ final class LedgerVC: UIViewController, ViewModelBindable {
     private let ledgerView = LedgerView()
     
     let disposeBag = DisposeBag()
-    
-    
     private var calendarDate = Date()
     private var calendarItems = [CalendarItem]()
     
@@ -64,9 +62,9 @@ final class LedgerVC: UIViewController, ViewModelBindable {
     func render(state: LedgerState) {
         switch state {
         case .naviagateToDetail(let date):
-            let viewController = TransactionListVC(transactionView: TransactionListView())
+            let viewController = TransactionListVC(viewModel: TransactionListVM())
             viewController.today = date
-                self.navigationController?.pushViewController(viewController, animated: true)
+                self.navigationController?.pushViewController(viewController, animated: false)
         case .navigateToTransaction:
             let viewController = UIViewController()
             self.navigationController?.pushViewController(viewController, animated: true)

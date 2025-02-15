@@ -8,7 +8,7 @@
 import SnapKit
 import UIKit
 
-class MoneyDiaryEditView: UIView {
+class TransactionView: UIView {
     //MARK: - UIComponent
     private let dateLabel = UIFactory.label(title: "수입일", textSize: 14)
     private let priceLabel = UIFactory.label(title: "수입금액", textSize: 14)
@@ -188,7 +188,7 @@ class MoneyDiaryEditView: UIView {
     }
 }
 
-extension MoneyDiaryEditView: UITextViewDelegate {
+extension TransactionView: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.systemGray4 {
             textView.text = nil
