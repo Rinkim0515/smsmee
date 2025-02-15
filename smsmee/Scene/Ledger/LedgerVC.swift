@@ -42,9 +42,11 @@ final class LedgerVC: UIViewController, ViewModelBindable {
         
     }
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.navigationController?.isNavigationBarHidden = true
     }
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         self.navigationController?.isNavigationBarHidden = false
     }
     
@@ -64,7 +66,7 @@ final class LedgerVC: UIViewController, ViewModelBindable {
         case .naviagateToDetail(let date):
             let viewController = TransactionListVC(viewModel: TransactionListVM())
             viewController.accept(date: date)
-                self.navigationController?.pushViewController(viewController, animated: false)
+                self.navigationController?.pushViewController(viewController, animated: true)
         case .navigateToTransaction:
             let viewController = TransactionVC()
             self.navigationController?.pushViewController(viewController, animated: true)
@@ -80,6 +82,7 @@ final class LedgerVC: UIViewController, ViewModelBindable {
     
     private func updateDate() {
         viewModel.stateRelay
+            
             .bind(onNext: { [weak self] state in
                 self?.render(state: state)
             })

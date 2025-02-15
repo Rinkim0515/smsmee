@@ -13,6 +13,8 @@ enum PlanListIntent: BaseIntent {
 
 enum PlanListState: BaseState {
     case idle
+    case navigateToCreate
+    case navigateToDetail
 }
 
 

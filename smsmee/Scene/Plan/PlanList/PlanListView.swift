@@ -10,7 +10,7 @@ import SnapKit
 
 
 class PlanListView: UIView {
-    private let titleLabel = UIFactory.label(title: "재무목표", textSize: 24)
+    private let titleLabel = UIFactory.label(title: "재무목표", textSize: 24, isBold: true)
     
     let addButton = UIFactory.button(title: "목표 추가", bgColor: .black)
     
