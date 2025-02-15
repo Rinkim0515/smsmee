@@ -85,10 +85,17 @@ extension RealmManager {
         }
     }
 
-    // ✅ 데이터 조회 (Read)
-
-
-    // ✅ 특정 User의 거래 내역 조회 (Read with Filter)
+    func update(_ block: @escaping () -> Void) {
+        do {
+            let realm = self.realm
+            try realm.write {
+                block()  // ✅ 트랜잭션 블록 실행
+            }
+        } catch {
+            print("Realm 업데이트 오류: \(error)")
+        }
+    }
+    
     func fetchTransactions(for userId: String) -> Results<Transaction> {
         return realm.objects(Transaction.self).filter("userId == %@", userId)
     }

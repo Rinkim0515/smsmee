@@ -10,8 +10,17 @@ import SnapKit
 
 final class TransactionListView: UIView {
 
-    let dailyIncome: UILabel = UIFactory.label(title: "income", textSize: 18, textColor: .blue)
-    let dailyExpense: UILabel = UIFactory.label(title: "expense", textSize: 18, textColor: .red)
+
+    let incometitle: UILabel = UIFactory.label(title: "수입", textSize: 18, textColor: .blue)
+    let expensetitle: UILabel = UIFactory.label(title: "지출", textSize: 18, textColor: .red)
+    let totaltitle: UILabel = UIFactory.label(title: "합산금액", textSize: 18, textColor: .black)
+    
+    let incomeLabel: UILabel = UIFactory.label(title: "10", textSize: 18, textColor: .blue)
+    let expenseLabel: UILabel = UIFactory.label(title: "10", textSize: 18, textColor: .red)
+    let amountLabel: UILabel = UIFactory.label(title: "10", textSize: 18, textColor: .black)
+    
+    let titleLable: UILabel = UIFactory.label(title: "거래내역", textSize: 24, textColor: .black, isBold: true)
+    
     lazy var listCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -33,27 +42,62 @@ final class TransactionListView: UIView {
     //MARK: - UI Render
     private func setupUI() {
         [
-         self.dailyIncome,
-         self.dailyExpense,
-         self.listCollectionView
+         listCollectionView,
+         incometitle,
+         totaltitle,
+         expensetitle,
+         incomeLabel,
+         expenseLabel,
+         titleLable,
+         amountLabel
+         
         ].forEach { self.addSubview($0) }
+
         
-        self.dailyIncome.snp.makeConstraints { make in
-            make.top.equalTo(self.snp.top).offset(20)
-            make.trailing.equalTo(dailyExpense.snp.leading).offset(-20)
-            make.height.equalTo(50)
+        titleLable.snp.makeConstraints { make in
+            make.top.equalTo(safeAreaLayoutGuide.snp.top).inset(15)
+            make.leading.equalTo(self.snp.leading).offset(20)
         }
-        self.dailyExpense.snp.makeConstraints { make in
-            make.centerY.equalTo(dailyIncome.snp.centerY)
-            make.trailing.equalTo(self.snp.trailing).offset(-20)
+        totaltitle.snp.makeConstraints { make in
+            make.bottom.equalTo(safeAreaLayoutGuide.snp.bottom).inset(20)
+            make.leading.equalToSuperview().inset(20)
         }
+
+        expensetitle.snp.makeConstraints { make in
+            make.bottom.equalTo(totaltitle).offset(-30)
+            make.leading.equalTo(totaltitle)
+        }
+        
+        incometitle.snp.makeConstraints { make in
+            make.bottom.equalTo(expensetitle).offset(-30)
+            make.leading.equalTo(totaltitle)
+        }
+        
+        amountLabel.snp.makeConstraints { make in
+            make.bottom.equalTo(totaltitle)
+            make.trailing.equalToSuperview().inset(20)
+            
+        }
+        incomeLabel.snp.makeConstraints { make in
+            make.bottom.equalTo(incometitle)
+            make.trailing.equalTo(amountLabel)
+        }
+        expenseLabel.snp.makeConstraints { make in
+            make.bottom.equalTo(expensetitle)
+            make.trailing.equalTo(amountLabel)
+        }
+        
         self.listCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(dailyIncome.snp.bottom).offset(20)
+            make.top.equalTo(titleLable.snp.bottom).offset(20)
             make.leading.trailing.equalTo(self).inset(20)
-            make.bottom.equalTo(self.safeAreaLayoutGuide.snp.bottom)
+            make.height.equalTo(400)
         }
+
+    
     }
 }
+
+
 
 
 

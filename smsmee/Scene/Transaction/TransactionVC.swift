@@ -9,12 +9,11 @@ import SnapKit
 
 
 final class TransactionVC: UIViewController, UITextFieldDelegate {
-    private var transactionItem: TransactionItem?
-    
-    private let trasactionView = TransactionView()
+    private var transactionItem: Transaction?
+    private let transactionView = TransactionView()
     
     // MARK: - LifeCycle
-    init(transactionItem: TransactionItem? = nil) {
+    init(transactionItem: Transaction? = nil) {
         self.transactionItem = transactionItem
         super.init(nibName: nil, bundle: nil)
     }
@@ -28,60 +27,74 @@ final class TransactionVC: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         addTarget()
         setupUI()
+        loadTransactionData()
     }
     
 
 
 
     private func setupUI() {
-        view.addSubview(trasactionView)
-        trasactionView.snp.makeConstraints { make in
+        view.addSubview(transactionView)
+        transactionView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        trasactionView.priceTextField.delegate = self
-        trasactionView.categoryTextField.delegate = self
-        trasactionView.priceTextField.tag = 0
-        trasactionView.categoryTextField.tag = 1
+        transactionView.priceTextField.delegate = self
+        transactionView.categoryTextField.delegate = self
+        transactionView.priceTextField.tag = 0
+        transactionView.categoryTextField.tag = 1
     }
     
     //MARK: - Objc
     func addTarget() {
-        trasactionView.saveButton.addTarget(self, action: #selector(saveData), for: .touchUpInside)
-        trasactionView.cancelButton.addTarget(self, action: #selector(didTapCancelButton), for: .touchUpInside)
+        transactionView.saveButton.addTarget(self, action: #selector(saveData), for: .touchUpInside)
+        transactionView.cancelButton.addTarget(self, action: #selector(didTapCancelButton), for: .touchUpInside)
         
     }
     
     @objc func saveData() {
-        let date = trasactionView.datePicker.date
-        
-        guard let amountText = trasactionView.priceTextField.text,
+        let date = transactionView.datePicker.date
+
+        guard let amountText = transactionView.priceTextField.text,
               let amount = KoreanCurrencyFormatter.shared.number(from: amountText) else {
             showAlert(message: "올바른 금액을 입력해주세요.")
             return
         }
-        
-        let isIncome = trasactionView.segmentControl.selectedSegmentIndex == 1
-        let title = trasactionView.titleTextField.text ?? ""
-        let category = trasactionView.categoryTextField.text
-        let note = trasactionView.noteTextView.text
+
+        let isIncome = transactionView.segmentControl.selectedSegmentIndex == 1
+        let title = transactionView.titleTextField.text ?? ""
+        let category = transactionView.categoryTextField.text
+        let note = transactionView.noteTextView.text
         let memo = note == "메모" ? nil : note
-        
-        
-        let entity = Transaction()
-        entity.title = title
-        entity.date = date
-        entity.amount = amount
-        entity.isIncome = isIncome
-        entity.category = category
-        entity.memo = memo
-        entity.userId = entity.userId
-        
-        RealmManager.shared.create(entity)
-        
-    
-        
-        showAlert(message: "데이터가 성공적으로 저장되었습니다.") { [weak self] in
-            self?.navigationController?.popViewController(animated: true)
+
+        if let existingItem = transactionItem {
+            // ✅ 기존 데이터 업데이트
+            RealmManager.shared.update {
+                existingItem.title = title
+                existingItem.date = date
+                existingItem.amount = amount
+                existingItem.isIncome = isIncome
+                existingItem.category = category
+                existingItem.memo = memo
+            }
+            showAlert(message: "데이터가 성공적으로 업데이트되었습니다.") { [weak self] in
+                self?.navigationController?.popViewController(animated: true)
+            }
+        } else {
+            // ✅ 새 데이터 생성
+            let entity = Transaction()
+            entity.title = title
+            entity.date = date
+            entity.amount = amount
+            entity.isIncome = isIncome
+            entity.category = category
+            entity.memo = memo
+            entity.userId = entity.userId
+
+            RealmManager.shared.create(entity)
+
+            showAlert(message: "데이터가 성공적으로 저장되었습니다.") { [weak self] in
+                self?.navigationController?.popViewController(animated: true)
+            }
         }
     }
 
@@ -96,6 +109,17 @@ final class TransactionVC: UIViewController, UITextFieldDelegate {
     
     @objc func didTapCancelButton() {
         self.navigationController?.popViewController(animated: false)
+    }
+    
+    private func loadTransactionData() {
+        guard let item = transactionItem else { return }
+
+        transactionView.titleTextField.text = item.title
+        transactionView.datePicker.date = item.date ?? Date()
+        transactionView.priceTextField.text = KoreanCurrencyFormatter.shared.string(from: item.amount)
+        transactionView.segmentControl.selectedSegmentIndex = item.isIncome ? 1 : 0
+        transactionView.categoryTextField.text = item.category
+        transactionView.noteTextView.text = item.memo ?? "메모"
     }
 }
 

@@ -18,10 +18,9 @@ final class TransactionListVC: UIViewController, ViewModelBindable {
     
     var disposeBag = DisposeBag()
     let listView = TransactionListView()
+
     var transactionList: [Transaction] = []
     var viewModel: TransactionListVM
-    
-    var today = Date()
     let dateManager = DateManager.shared
     var dailyIncome = 0
     var dailyExpense = 0
@@ -46,31 +45,62 @@ final class TransactionListVC: UIViewController, ViewModelBindable {
     
     override func viewWillAppear(_ animated: Bool) {
         listView.listCollectionView.reloadData()
-        reloadTotalAmount()
     }
     
     
     
-    func render(state: TransactionListState) {
-        
-    }
+
     
     func updateData() {
+        viewModel.stateRelay
+            .bind(onNext: { [weak self] state in
+                self?.render(state: state)
+                
+            })
+            .disposed(by: disposeBag)
         viewModel.expenseAmount
             .map{ String($0) }
-            .bind(to: listView.dailyExpense.rx.text)
+            .bind(to: listView.incomeLabel.rx.text)
             .disposed(by: disposeBag)
         
         viewModel.incomeAmount
             .map { String($0) }
-            .bind(to: listView.dailyIncome.rx.text)
+            .bind(to: listView.expenseLabel.rx.text)
             .disposed(by: disposeBag)
         
         viewModel.currrentDate
             .map { DateFormatter.yearToDayKR.string(from: $0) }
             .bind(to: self.navigationItem.rx.title)
             .disposed(by: disposeBag)
+        
+        viewModel.transactions
+            .bind(to: listView.listCollectionView.rx.items(cellIdentifier:TransactionListCell.reuseId, cellType: TransactionListCell.self)) { index, item, cell in
+                cell.updateData(transaction: item)
+                
+                cell.layer.cornerRadius = 20
+                cell.layer.borderWidth = 1
+                cell.layer.borderColor = UIColor.black.cgColor
+            }
+            .disposed(by: disposeBag)
+        listView.listCollectionView.rx.modelSelected(Transaction.self)
+            .subscribe(onNext: { [weak self] item in
+                self?.viewModel.intentRelay.accept(.tapCell(item))
+                //탭이 되었음을 알리고 데이터를 전달해줘야하는데  그래야 edit으로
+            })
+            .disposed(by: disposeBag)
     }
+    
+    func render(state: TransactionListState) {
+        switch state {
+        case .navigateToDetail(let item):
+            let viewController = TransactionVC(transactionItem: item)
+            self.navigationController?.pushViewController(viewController, animated: true)
+        default:
+            return
+        }
+    }
+    
+    
     
     private func setupUI() {
         let appearance = UINavigationBarAppearance()
@@ -81,75 +111,49 @@ final class TransactionListVC: UIViewController, ViewModelBindable {
             .foregroundColor: UIColor.black,  // 원하는 색상으로 변경
             .font: UIFont.boldSystemFont(ofSize: 18) // 폰트 설정 (선택 사항)
         ]
-
+        
         
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationController?.navigationBar.compactAppearance = appearance
         
         
-        listView.listCollectionView.dataSource = self
+        
         listView.listCollectionView.delegate = self
         listView.listCollectionView.register(TransactionListCell.self, forCellWithReuseIdentifier: TransactionListCell.reuseId)
+        
         self.view.addSubview(listView)
         
         listView.snp.makeConstraints {
-            $0.edges.equalTo(self.view.safeAreaLayoutGuide)
+            $0.edges.equalToSuperview()
         }
-    }
 
-    
-    private func reloadTotalAmount() {
-        
-        let startTime = dateManager.getDayOfStart(date: today)
-        let endTime = dateManager.getDayOfEnd(date: today)
-        
-        transactionList = Array(RealmManager.shared.fetchDiaryBetweenDates(startTime,endTime))
-        
-            var incomeAmount = 0
-            var expesneAmount = 0
-            
-            for item in transactionList {
-                if item.isIncome { incomeAmount += Int(item.amount) }
-                else { expesneAmount += Int(item.amount) }
-            }
-        let imcomeString = "\(incomeAmount)"
-        let expenseString = "\(expesneAmount)"
-            
-    
-
-            self.listView.dailyIncome.text = "수입: \(imcomeString) 원"
-            self.listView.dailyExpense.text = "지출: \(expenseString) 원"
-            
         
     }
+    func accept(date: Date) {
+        viewModel.currrentDate.accept(date)
+    }
+    
     
 }
 
-extension TransactionListVC: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let viewController = MoneyDiaryEditVC(item: transactionList[indexPath.row])
-//        self.navigationController?.pushViewController(viewController, animated: false)
-    }
+extension TransactionListVC {
+
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return transactionList.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: TransactionListCell.reuseId,
-            for: indexPath) as? TransactionListCell
-                
-        else { return UICollectionViewCell() }
-        
-        cell.updateData(transaction: transactionList[indexPath.row])
-        cell.layer.cornerRadius = 20
-        cell.layer.borderWidth = 1
-        cell.layer.borderColor = UIColor.black.cgColor
-        return cell
-    }
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        
+//        guard let cell = collectionView.dequeueReusableCell(
+//            withReuseIdentifier: TransactionListCell.reuseId,
+//            for: indexPath) as? TransactionListCell
+//                
+//        else { return UICollectionViewCell() }
+//        
+//        cell.updateData(transaction: transactionList[indexPath.row])
+//        cell.layer.cornerRadius = 20
+//        cell.layer.borderWidth = 1
+//        cell.layer.borderColor = UIColor.black.cgColor
+//        return cell
+//    }
 }
 
 extension TransactionListVC: UICollectionViewDelegateFlowLayout {

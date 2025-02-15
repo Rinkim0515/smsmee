@@ -10,12 +10,12 @@ import RxSwift
 import RxCocoa
 
 enum TransactionListIntent: BaseIntent {
-    case tapCell
+    case tapCell(Transaction)
 }
 
 enum TransactionListState: BaseState {
     case idle
-    case navigateToDetail
+    case navigateToDetail(Transaction)
 }
 
 class TransactionListVM: BaseViewModel<TransactionListIntent, TransactionListState> {
@@ -25,8 +25,20 @@ class TransactionListVM: BaseViewModel<TransactionListIntent, TransactionListSta
     let expenseAmount = BehaviorRelay<Int>(value: 0)
     let incomeAmount = BehaviorRelay<Int>(value: 0)
     
+    
     override func transform() {
         reloadTotalAmount()
+        intentRelay
+            .subscribe(onNext: { [weak self] intent in
+                guard let self = self else { return }
+                
+                switch intent {
+                case .tapCell(let item):
+                    self.updateState(.navigateToDetail(item))
+                
+                }
+            })
+            .disposed(by: disposeBag)
     }
     
     private func reloadTotalAmount() {
