@@ -4,82 +4,66 @@
 //
 //  Created by KimRin on 2/11/25.
 //
-
-import Foundation
 import UIKit
-import RxSwift
+import SnapKit
 
-final class TransactionVC: UIViewController, ViewModelBindable  {
-    typealias Intent = TransactionIntent
-    typealias State = TransactionState
-    typealias VM = TransactionVM
-    
-    private let transactionView: TransactionView = TransactionView()
-    var viewModel: TransactionVM
-    
+
+final class TransactionVC: UIViewController, UITextFieldDelegate {
     private var transactionItem: TransactionItem?
-    let disposeBag = DisposeBag()
     
+    private let trasactionView = TransactionView()
     
-    
-    //MARK: - Life Cycle
-    init(transactionItem: TransactionItem? = nil, viewModel: TransactionVM) {
-        
+    // MARK: - LifeCycle
+    init(transactionItem: TransactionItem? = nil) {
         self.transactionItem = transactionItem
-        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
-    // 초기화때 값이 없으면 생성, 있으면 편집
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-
+    //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         addTarget()
-        setupTextFields()
-    }
-    
-    override func loadView() {
-        super.loadView()
-        self.view = transactionView
+        setupUI()
     }
     
 
-    
-    func render(state: TransactionState) {
-        
-    }
-    
-    private func setupTextFields() {
-        transactionView.priceTextField.delegate = self
-        transactionView.categoryTextField.delegate = self
-        transactionView.priceTextField.tag = 0
-        transactionView.categoryTextField.tag = 1
+
+
+    private func setupUI() {
+        view.addSubview(trasactionView)
+        trasactionView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        trasactionView.priceTextField.delegate = self
+        trasactionView.categoryTextField.delegate = self
+        trasactionView.priceTextField.tag = 0
+        trasactionView.categoryTextField.tag = 1
     }
     
     //MARK: - Objc
     func addTarget() {
-        transactionView.saveButton.addTarget(self, action: #selector(saveData), for: .touchUpInside)
-        transactionView.cancelButton.addTarget(self, action: #selector(didTapCancelButton), for: .touchUpInside)
+        trasactionView.saveButton.addTarget(self, action: #selector(saveData), for: .touchUpInside)
+        trasactionView.cancelButton.addTarget(self, action: #selector(didTapCancelButton), for: .touchUpInside)
         
     }
     
     @objc func saveData() {
-        let date = transactionView.datePicker.date
+        let date = trasactionView.datePicker.date
         
-        guard let amountText = transactionView.priceTextField.text,
+        guard let amountText = trasactionView.priceTextField.text,
               let amount = KoreanCurrencyFormatter.shared.number(from: amountText) else {
             showAlert(message: "올바른 금액을 입력해주세요.")
             return
         }
         
-        let isIncome = transactionView.segmentControl.selectedSegmentIndex == 1
-        let title = transactionView.titleTextField.text ?? ""
-        let category = transactionView.categoryTextField.text
-        let note = transactionView.noteTextView.text
+        let isIncome = trasactionView.segmentControl.selectedSegmentIndex == 1
+        let title = trasactionView.titleTextField.text ?? ""
+        let category = trasactionView.categoryTextField.text
+        let note = trasactionView.noteTextView.text
         let memo = note == "메모" ? nil : note
         
         
@@ -90,6 +74,7 @@ final class TransactionVC: UIViewController, ViewModelBindable  {
         entity.isIncome = isIncome
         entity.category = category
         entity.memo = memo
+        entity.userId = entity.userId
         
         RealmManager.shared.create(entity)
         
@@ -133,12 +118,7 @@ extension TransactionVC {
     }
     
 
-
     
 
-}
-
-extension TransactionVC: UITextFieldDelegate {
-    
 }
 

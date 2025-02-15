@@ -61,9 +61,7 @@ class LedgerVM: BaseViewModel<LedgerIntent, LedgerState> {
                     self.updateState(.naviagateToDetail(item.date))
 
                 case .createTransaction:
-                    let today = Date()
-                    self.currentDate.accept(today)
-                    self.updateState(.updateDate(today))
+                    self.updateState(.navigateToTransaction)
                 }
 
             })

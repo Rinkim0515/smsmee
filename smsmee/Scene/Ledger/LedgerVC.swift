@@ -66,13 +66,15 @@ final class LedgerVC: UIViewController, ViewModelBindable {
             viewController.today = date
                 self.navigationController?.pushViewController(viewController, animated: false)
         case .navigateToTransaction:
-            let viewController = UIViewController()
+            let viewController = TransactionVC()
             self.navigationController?.pushViewController(viewController, animated: true)
         default:
             return
          
         }
     }
+    
+
 
 
     
@@ -116,7 +118,10 @@ final class LedgerVC: UIViewController, ViewModelBindable {
             .map { LedgerIntent.moveToday}
             .bind(to: viewModel.intentRelay)
             .disposed(by: disposeBag)
-        
+        ledgerView.floatingButton.rx.tap
+            .map { LedgerIntent.createTransaction}
+            .bind(to: viewModel.intentRelay)
+            .disposed(by: disposeBag)
             
     }
 

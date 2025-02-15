@@ -62,10 +62,12 @@ class UIFactory {
     //MARK: - UIDatePicker
     static func datePicker() -> UIDatePicker {
         let picker = UIDatePicker()
-        picker.datePickerMode = .date
-        picker.preferredDatePickerStyle = .wheels
+        picker.datePickerMode = .dateAndTime
+        picker.preferredDatePickerStyle = .compact
         picker.locale = Locale(identifier: "ko_KR")
         picker.timeZone = TimeZone(identifier: "Asia/Seoul")
+        picker.backgroundColor = .white
+        picker.tintColor = .black
         return picker
     }
 

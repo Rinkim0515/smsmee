@@ -60,32 +60,19 @@ class LedgerView: UIView {
         return button
     }()
     lazy var floatingButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "pencilButton"), for: .normal)
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "plus")
+        config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 10, weight: .bold)
+        config.imagePadding = 10
+        config.imagePlacement = .leading
+        let button = UIButton(configuration: config)
+        button.tintColor = .black
+        button.layer.cornerRadius = 25
+        button.layer.borderWidth = 2
+        button.layer.borderColor = UIColor.black.cgColor
         return button
     }()
-    let pencilButton: UIButton = {
-        let button = UIButton()
-        var config = UIButton.Configuration.filled()
-        config.cornerStyle = .capsule
-        config.image = UIImage(systemName: "pencil")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .medium))
-        button.configuration = config
-        button.layer.shadowRadius = 10
-        button.layer.shadowOpacity = 0.3
-        button.alpha = 0.0
-        return button
-    }()
-    let quickMessageButton: UIButton = {
-        let button = UIButton()
-        var config = UIButton.Configuration.filled()
-        config.cornerStyle = .capsule
-        config.image = UIImage(systemName: "text.append")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .medium))
-        button.configuration = config
-        button.layer.shadowRadius = 10
-        button.layer.shadowOpacity = 0.3
-        button.alpha = 0.0
-        return button
-    }()
+
     //MARK: - LifeCycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -119,10 +106,7 @@ class LedgerView: UIView {
         }
     }
     
-    func addActionToPencilButton(_ action: UIAction) {
-        pencilButton.addAction(action, for: .touchUpInside)
-    }
-    
+
     private func configureUI() {
         [
             dateButton,
@@ -130,9 +114,7 @@ class LedgerView: UIView {
             todayButton,
             nextButton,
             calendarView,
-            floatingButton,
-            pencilButton,
-            quickMessageButton,
+            floatingButton
 //            moveBudgetButton
         ].forEach { self.addSubview($0) }
         
@@ -170,54 +152,15 @@ class LedgerView: UIView {
         
         floatingButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(20)
-            $0.bottom.equalToSuperview().inset(40)
-            $0.width.height.equalTo(60)
+            $0.bottom.equalTo(safeAreaLayoutGuide.snp.bottom).inset(80)
+            $0.width.height.equalTo(50)
         }
         
-        pencilButton.snp.makeConstraints {
-            $0.centerX.equalTo(floatingButton.snp.centerX)
-            $0.bottom.equalTo(floatingButton.snp.top).offset(-15)
-            $0.width.height.equalTo(40)
-        }
-        
-        quickMessageButton.snp.makeConstraints {
-            $0.centerX.equalTo(floatingButton.snp.centerX)
-            $0.bottom.equalTo(pencilButton.snp.top).offset(-15)
-            $0.width.height.equalTo(40)
-        }
         
     }
     
     
-    func popButtons(isActive: Bool) {
-        if isActive {
-            pencilButton.layer.transform = CATransform3DMakeScale(0.4, 0.4, 1)
-            UIView.animate(withDuration: 0.3, delay: 0.2, usingSpringWithDamping: 0.55, initialSpringVelocity: 0.3, options: [.curveEaseInOut], animations: { [weak self] in
-                guard let self = self else { return }
-                pencilButton.layer.transform = CATransform3DIdentity
-                pencilButton.alpha = 1.0
-            })
-            
-            quickMessageButton.layer.transform = CATransform3DMakeScale(0.4, 0.4, 1)
-            UIView.animate(withDuration: 0.3, delay: 0.2, usingSpringWithDamping: 0.55, initialSpringVelocity: 0.3, options: [.curveEaseInOut], animations: { [weak self] in
-                guard let self = self else { return }
-                quickMessageButton.layer.transform = CATransform3DIdentity
-                quickMessageButton.alpha = 1.0
-                
-            })
-        } else {
-            UIView.animate(withDuration: 0.15, delay: 0.2, options: []) { [weak self] in
-                guard let self = self else { return }
-                pencilButton.layer.transform = CATransform3DMakeScale(0.4, 0.4, 0.1)
-                pencilButton.alpha = 0.0
-                
-                quickMessageButton.layer.transform = CATransform3DMakeScale(0.4, 0.4, 0.1)
-                quickMessageButton.alpha = 0.0
-                
-                
-            }
-        }
-    }
+
     
     
     

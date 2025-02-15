@@ -31,6 +31,7 @@ class TransactionView: UIView {
     let noteTextView: UITextView = {
         let textView = UITextView()
         textView.text = "메모"
+        textView.backgroundColor = .white
         textView.textColor = .systemGray4
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.layer.borderColor = UIColor.systemGray5.cgColor
@@ -43,6 +44,7 @@ class TransactionView: UIView {
     
     let deleteButton: UIBarButtonItem = {
         let barButton = UIBarButtonItem()
+        barButton.tintColor = .black
         barButton.image = UIImage(systemName: "trash")
         return barButton
     }()
